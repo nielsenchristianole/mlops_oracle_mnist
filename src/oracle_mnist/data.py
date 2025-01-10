@@ -56,8 +56,8 @@ class OracleMNISTInMemory(OracleMNIST):
     Loads the data from memory
     """
 
-    def __init__(self, data_paths):
-        super().__init__(data_paths)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
         self.data = [None] * len(self.data_paths)
         self.targets = [None] * len(self.data_paths)
@@ -67,7 +67,7 @@ class OracleMNISTInMemory(OracleMNIST):
         self.targets = torch.stack(self.targets)
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.LongTensor]:
-        self.data[idx], self.targets[idx]
+        return self.data[idx], self.targets[idx]
 
 
 class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
@@ -77,9 +77,9 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
     It provides the basic functionality for the dataset
     """
 
-    train_dataset: Optional[torch.Tensor] = None
-    val_dataset: Optional[torch.Tensor] = None
-    test_dataset: Optional[torch.Tensor] = None
+    train_dataset: Optional[OracleMNIST] = None
+    val_dataset: Optional[OracleMNIST] = None
+    test_dataset: Optional[OracleMNIST] = None
     data_version_name: str
 
     def __init__(
@@ -208,45 +208,45 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
 
             self.val_dataset = _dataset(
                 data_paths=data_paths[is_val_data],
-                in_memory=self.in_memory_dataset,
                 use_rgb=self.use_rgb)
         
         # train dataset
         if stage == 'fit':
             self.train_dataset = _dataset(
                 data_paths=data_paths[~is_val_data],
-                in_memory=self.in_memory_dataset,
                 use_rgb=self.use_rgb)
 
         # test dataset
         if stage in ('test', 'predict'):
             self.test_dataset = _dataset(
                 data_paths=sorted(self.processed_test_dir.glob('**/*.npy')),
-                in_memory=self.in_memory_dataset,
                 use_rgb=self.use_rgb)
 
-    def train_dataloader(self) -> DataLoader:
+    def train_dataloader(self):
         """
         Returns the training dataloader
         """
+        assert self.train_dataset is not None, 'Train dataset is not set'
         kwargs = dict(shuffle=True) | self.dataloader_kwargs
         return DataLoader(
             self.train_dataset,
             **kwargs)
     
-    def val_dataloader(self) -> DataLoader:
+    def val_dataloader(self):
         """
         returns the validation dataloader
         """
+        assert self.train_dataset is not None, 'Val dataset is not set'
         kwargs = dict(shuffle=False) | self.dataloader_kwargs
         return DataLoader(
             self.val_dataset,
             **kwargs)
     
-    def test_dataloader(self) -> DataLoader:
+    def test_dataloader(self):
         """
         returns the test dataloader
         """
+        assert self.train_dataset is not None, 'Test dataset is not set'
         kwargs = dict(shuffle=False) | self.dataloader_kwargs
         return DataLoader(
             self.test_dataset,
@@ -306,16 +306,26 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
 
 if __name__ == "__main__":
 
-    data_module = OracleMNISTModuleBasic(batch_size=32)
-    data_module.prepare_data()
-    data_module.setup('fit')
-    data_module.setup('validate')
-    data_module.setup('test')
+    for in_memory in (True, False):
+        print(f'In memory: {in_memory}')
 
-    train_loader = data_module.train_dataloader()
-    val_loader = data_module.val_dataloader()
-    test_loader = data_module.test_dataloader()
+        data_module = OracleMNISTModuleBasic(batch_size=32, in_memory_dataset=in_memory)
+        data_module.prepare_data()
+        data_module.setup('fit')
+        data_module.setup('validate')
+        data_module.setup('test')
 
-    print(len(train_loader))
-    print(len(val_loader))
-    print(len(test_loader))
+        train_loader = data_module.train_dataloader()
+        val_loader = data_module.val_dataloader()
+        test_loader = data_module.test_dataloader()
+
+        for x, y in train_loader:
+            print(x.shape)
+            print(y.shape)
+            break
+
+        print(len(data_module.train_dataset))
+        print(len(data_module.val_dataset))
+        print(len(data_module.test_dataset))
+        print(type(data_module.train_dataset))
+        print()
