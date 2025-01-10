@@ -32,7 +32,7 @@ line-length = 120
 omit = ["tests/*"]
 
 [project.scripts]
-preprocess = "oracle_mnist.train:preprocess"
+preprocess = "oracle_mnist.data:preprocess"
 train = "oracle_mnist.train:main"
 evaluate = "oracle_mnist.evaluate:main"
-visualize = "oracle_mnist.evaluate:main"
+visualize = "oracle_mnist.visualize:main"
