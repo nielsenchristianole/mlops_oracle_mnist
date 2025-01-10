@@ -1,5 +1,4 @@
 from pathlib import Path
-
 import typer
 from torch.utils.data import Dataset
 import numpy as np
@@ -21,7 +20,7 @@ class DummyDataset(Dataset):
         """Return a given sample from the dataset."""
         return {"index": index}
     
-    def load_data():
+    def load_data(self):
         # Generate dummy data
         data = np.random.randint(0, 256, (1000, 28, 28), dtype=np.uint8)
         # Generate random targets
