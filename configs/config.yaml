@@ -1,0 +1,17 @@
+
+model:
+  _target_: src.models.<model_name>.<model_class>
+  <model_specific_config>: <model_specific_value>
+  ...
+
+train:
+  optimizer:
+    _target_: torch.optim.Adam
+    lr: 1e-3
+    betas: [0.9, 0.999]
+    eps: 1e-8
+    weight_decay: 0  
+  batch_size: 32
+  epochs: 10
+misc:
+  seed: 42
