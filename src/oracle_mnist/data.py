@@ -23,46 +23,60 @@ ONLINE_DATA_URL = "https://drive.google.com/uc?id=1gPYAOc9CTvrUQFCASW3oz30lGdKBi
 
 
 class OracleMNIST(Dataset):
+    """
+    Oracle MNIST dataset
+
+    Loads the data from disk
+    """
 
     def __init__(
         self,
         data_paths: list[Path],
-        *,
-        in_memory: bool=False
+        use_rgb: bool = True
     ) -> None:
 
         super().__init__()
-
-        self.in_memory = in_memory
         self.data_paths = sorted(data_paths)
-
-        if in_memory:
-            self.data = [None] * len(self.data_paths)
-            self.targets = [None] * len(self.data_paths)
-            for idx in range(len(self.data_paths)):
-                self.data[idx], self.targets[idx] = self._load_item(idx)
-            self.data = torch.stack(self.data)
-            self.targets = torch.stack(self.targets)
-
-    def _load_item(self, idx: int) -> tuple[torch.Tensor, torch.LongTensor]:
-        path = self.data_paths[idx]
-        data = np.load(path)
-        target = int(path.parent.name)
-        return torch.from_numpy(data).float(), torch.tensor(target).long()
-
-    def _load_item_in_memory(self, idx: int) -> tuple[torch.Tensor, torch.LongTensor]:
-        self.data[idx], self.targets[idx]
+        self.use_rgb = use_rgb
 
     def __len__(self) -> int:
         return len(self.data_paths)
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.LongTensor]:
-        if self.in_memory:
-            return self._load_item_in_memory(idx)
-        return self._load_item(idx)
+        path = self.data_paths[idx]
+        data = torch.from_numpy(np.load(path)).float()
+        target = int(path.parent.name)
+        return data.repeat(3, 1, 1) if self.use_rgb else data, torch.tensor(target).long()
+
+
+class OracleMNISTInMemory(OracleMNIST):
+    """
+    Oracle MNIST dataset
+
+    Loads the data from memory
+    """
+
+    def __init__(self, data_paths):
+        super().__init__(data_paths)
+
+        self.data = [None] * len(self.data_paths)
+        self.targets = [None] * len(self.data_paths)
+        for idx in range(len(self.data_paths)):
+            self.data[idx], self.targets[idx] = super().__getitem__(idx)
+        self.data = torch.stack(self.data)
+        self.targets = torch.stack(self.targets)
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.LongTensor]:
+        self.data[idx], self.targets[idx]
 
 
 class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
+    """
+    This is the base class for the Oracle MNIST dataset
+
+    It provides the basic functionality for the dataset
+    """
+
     train_dataset: Optional[torch.Tensor] = None
     val_dataset: Optional[torch.Tensor] = None
     test_dataset: Optional[torch.Tensor] = None
@@ -72,6 +86,7 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         self,
         val_split: float = 0.2,
         in_memory_dataset: bool = False,
+        use_rgb: bool = True,
         **dataloader_kwargs
     ) -> None:
 
@@ -86,6 +101,7 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
 
         self.val_split = val_split
         self.in_memory_dataset = in_memory_dataset
+        self.use_rgb = use_rgb
         self.dataloader_kwargs = dataloader_kwargs
 
         self.post_init()
@@ -98,6 +114,9 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
 
     @staticmethod
     def _download_data() -> None:
+        """
+        Download and extraxt raw data
+        """
         _tmp_path = os.path.join(RAW_DATA_PATH, 'raw.tar.gz')
         _tmp_dir = Path(RAW_DATA_PATH) / 'oracle-mnist-origin'
 
@@ -126,6 +145,9 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
             str(self.processed_test_dir).format(data_version_name=data_version_name))
 
     def prepare_data(self) -> None:
+        """
+        Prepare the data, this is run once in the beginning of training
+        """
         if not self.raw_train_dir.exists() or not self.raw_test_dir.exists():
             self._download_data()
         self._process_data()
@@ -173,41 +195,58 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         self,
         stage: Literal['fit', 'validate', 'test', 'predict']
     ) -> None:
+        """
+        This is run once on each process in distributed training
+        """
         
+        _dataset = OracleMNISTInMemory if self.in_memory_dataset else OracleMNIST
+
         # val dataset
         if stage in ('fit', 'validate'):
             data_paths = np.array(sorted(self.processed_train_dir.glob('**/*.npy')))
             is_val_data = np.array([self._is_val_data(path) for path in data_paths])
 
-            self.val_dataset = OracleMNIST(
+            self.val_dataset = _dataset(
                 data_paths=data_paths[is_val_data],
-                in_memory=self.in_memory_dataset)
+                in_memory=self.in_memory_dataset,
+                use_rgb=self.use_rgb)
         
         # train dataset
         if stage == 'fit':
-            self.train_dataset = OracleMNIST(
+            self.train_dataset = _dataset(
                 data_paths=data_paths[~is_val_data],
-                in_memory=self.in_memory_dataset)
+                in_memory=self.in_memory_dataset,
+                use_rgb=self.use_rgb)
 
         # test dataset
         if stage in ('test', 'predict'):
-            self.test_dataset = OracleMNIST(
+            self.test_dataset = _dataset(
                 data_paths=sorted(self.processed_test_dir.glob('**/*.npy')),
-                in_memory=self.in_memory_dataset)
+                in_memory=self.in_memory_dataset,
+                use_rgb=self.use_rgb)
 
     def train_dataloader(self) -> DataLoader:
+        """
+        Returns the training dataloader
+        """
         kwargs = dict(shuffle=True) | self.dataloader_kwargs
         return DataLoader(
             self.train_dataset,
             **kwargs)
     
     def val_dataloader(self) -> DataLoader:
+        """
+        returns the validation dataloader
+        """
         kwargs = dict(shuffle=False) | self.dataloader_kwargs
         return DataLoader(
             self.val_dataset,
             **kwargs)
     
     def test_dataloader(self) -> DataLoader:
+        """
+        returns the test dataloader
+        """
         kwargs = dict(shuffle=False) | self.dataloader_kwargs
         return DataLoader(
             self.test_dataset,
@@ -215,6 +254,12 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
 
 
 class OracleMNISTModuleBasic(OracleMNISTBaseModule):
+    """
+    This data module mimics the preprocessing steps of the original paper.
+
+    https://arxiv.org/abs/2205.09442
+    """
+
     data_version_name = 'basic_{imsize}'
 
     def __init__(self, *args, imsize: int=28, **kwargs) -> None:
