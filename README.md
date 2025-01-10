@@ -53,3 +53,23 @@ The directory structure of the project looks like this:
 Created using [mlops_template](https://github.com/SkafteNicki/mlops_template),
 a [cookiecutter template](https://github.com/cookiecutter/cookiecutter) for getting
 started with Machine Learning Operations (MLOps).
+
+
+# Project Description
+### Goal
+This is the project description from group 19 in the 02476 Machine Learning Operations course at DTU. The goal of this project is to create a complete pipeline from raw hieroglyph data to classified images, with the tools given to us from the course. 
+
+### Framework
+The TIMM framework seems like the optimal choice for this project. Specifically we are going to use an image classification framework.
+
+### Data
+We have chosen to work with a raw hieroglyph dataset consisting of 30222 ancient labelled characters from 10 categories of images in different sizes and colors. There is a preprocessed version of the dataset where the images have been grayscale, negated, resized and extended.
+
+
+### Models
+We expect to use some types of pre-trained CNN models for the image classification. We will probably be using different models from the TIMM framework.
+
+
+
+
+
