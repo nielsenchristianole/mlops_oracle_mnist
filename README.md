@@ -60,7 +60,7 @@ started with Machine Learning Operations (MLOps).
 This is the project description from group 19 in the 02476 Machine Learning Operations course at DTU. The goal of this project is to create a complete pipeline from raw hieroglyph data to classified images, with the tools given to us from the course. 
 
 ### Framework
-The TIMM framework seems like the optimal choice for this project. Specifically we are going to use 
+The TIMM framework seems like the optimal choice for this project. Specifically we are going to use an image classification framework.
 
 ### Data
 We have chosen to work with a raw hieroglyph dataset consisting of 30222 ancient labelled characters from 10 categories of images in different sizes and colors. There is a preprocessed version of the dataset where the images have been grayscale, negated, resized and extended.
