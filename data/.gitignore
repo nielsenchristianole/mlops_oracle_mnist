@@ -1,0 +1,4 @@
+*
+!.gitignore
+!processed/.gitkeep
+!raw/.gitkeep
