@@ -10,7 +10,14 @@ train:
     lr: 1e-3
     betas: [0.9, 0.999]
     eps: 1e-8
-    weight_decay: 0  
+    weight_decay: 0
+  scheduler:
+    _target_: torch.optim.lr_scheduler.StepLR
+    lr_half_period : 2000
+    lr_mult_period : 2
+    lr_min: 1e-4
+    lr_warmup_max: 4e-2
+    lr_warmup_period: 1000
   batch_size: 32
   epochs: 10
 misc:
