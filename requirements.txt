@@ -7,3 +7,4 @@ torchvision==0.20.1
 torchaudio==2.5.1
 pytorch-lightning==2.5.0
 omegaconf~=2.1.1
+scikit-learn

@@ -1,7 +1,6 @@
 
 import torch
 
-
 class SarphivSchedular(torch.optim.lr_scheduler._LRScheduler):
     
     def __init__(self, optimizer,
@@ -10,6 +9,8 @@ class SarphivSchedular(torch.optim.lr_scheduler._LRScheduler):
                  lr_min,
                  lr_warmup_max,
                  lr_warmup_period):
+        
+        self.optimizer = optimizer
         
         lr_cosine = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
             optimizer=optimizer,
@@ -27,6 +28,7 @@ class SarphivSchedular(torch.optim.lr_scheduler._LRScheduler):
             schedulers=[lr_super, lr_cosine], # type: ignore
             milestones=[int(lr_warmup_period)],
         )
+        
         
         self.lr_scheduler = lr_scheduler
     
