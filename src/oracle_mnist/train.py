@@ -10,7 +10,7 @@ import hydra
 from omegaconf import DictConfig
 
 # @app.command()
-@hydra.main(config_path = "../../configs", config_name = "config")
+@hydra.main(config_path = "../../configs", config_name = "config", version_base=None)
 def train(cfg : DictConfig) -> None:
     
     seed_everything(cfg.misc.seed)

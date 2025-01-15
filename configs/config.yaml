@@ -13,8 +13,7 @@ data_loader:
   batch_size: 32
   num_workers: 4
   in_memory_dataset: false
-  validation_split: 0.2
-  img_size: 28
+  val_split: 0.2
   use_rgb: true
 
 train:
@@ -25,7 +24,7 @@ train:
     eps: 1e-8
     weight_decay: 0
   scheduler:
-    _target_: scheduler.sarphiv_scheduler.SarphivSchedular
+    _target_: scheduler.sarphiv_scheduler.get_schedular
     lr_half_period: 2000
     lr_mult_period: 2
     lr_min: 1e-4
