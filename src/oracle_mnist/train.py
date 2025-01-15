@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from pytorch_lightning import Trainer, seed_everything
 from oracle_mnist.modules.train_module import MNISTModule
-# from data import load_oracle_mnist_data  # Import the data loading function
+from oracle_mnist.data import OracleMNISTModuleBasic  # Import the data loading class
 
 import timm
 
@@ -16,14 +16,13 @@ def train(cfg : DictConfig) -> None:
     seed_everything(cfg.misc.seed)
     
     # Define paths and parameters
-    data_dir = cfg.data.processed_dir
-    batch_size = cfg.train.batch_size
-
-    # Load the data using the data.py function
-    train_loader, val_loader = load_oracle_mnist_data(data_dir, batch_size)
+    # data_dir = cfg.data.processed_dir
+    # batch_size = cfg.train.batch_size
 
     # Initialize the model
     model = timm.create_model(**cfg.model)
+    
+    data_module = hydra.utils.instantiate(cfg.data_loader)
     optimizer = hydra.utils.instantiate(cfg.train.optimizer, model.parameters())
     scheduler = hydra.utils.call(cfg.train.scheduler, optimizer = optimizer)
     criterion = nn.CrossEntropyLoss()
@@ -33,7 +32,7 @@ def train(cfg : DictConfig) -> None:
     # Use Lightning Trainer
     trainer = Trainer(max_epochs=cfg.train.epochs,
                       accelerator="gpu" if torch.cuda.is_available() else "cpu")
-    trainer.fit(train_module, train_loader, val_loader)
+    trainer.fit(train_module, data_module)
     
 
 if __name__ == "__main__":
