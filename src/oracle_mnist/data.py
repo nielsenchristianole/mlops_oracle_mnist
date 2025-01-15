@@ -56,8 +56,8 @@ class OracleMNISTInMemory(OracleMNIST):
     Loads the data from memory
     """
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, data_paths: list[Path], use_rgb: bool = True) -> None:
+        super().__init__(data_paths=data_paths, use_rgb=use_rgb)
 
         self.data = [None] * len(self.data_paths)
         self.targets = [None] * len(self.data_paths)
@@ -68,6 +68,21 @@ class OracleMNISTInMemory(OracleMNIST):
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.LongTensor]:
         return self.data[idx], self.targets[idx]
+
+
+class OracleMNISTDummy(OracleMNIST):
+
+    def __init__(self, data_paths: list[Path], use_rgb: bool = True, *, data_shape: tuple[int, ...], num_datapoints: int) -> None:
+        super().__init__(data_paths=data_paths, use_rgb=use_rgb)
+
+        self.data_shape = data_shape
+        self.num_datapoints = num_datapoints
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.LongTensor]:
+        return torch.rand(*self.data_shape), torch.tensor(0).long()
+    
+    def __len__(self) -> int:
+        return self.num_datapoints
 
 
 class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
@@ -191,6 +206,10 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         input shape is (H, W, C)
         """
 
+    @property
+    def _dataset(self) -> OracleMNIST:
+        return OracleMNISTInMemory if self.in_memory_dataset else OracleMNIST
+
     def setup(
         self,
         stage: Literal['fit', 'validate', 'test', 'predict']
@@ -199,6 +218,10 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         This is run once on each process in distributed training
         """
         
+        
+        _dataset = OracleMNISTInMemory if self.in_memory_dataset else OracleMNIST
+
+
         _dataset = OracleMNISTInMemory if self.in_memory_dataset else OracleMNIST
 
         # val dataset
@@ -206,19 +229,19 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
             data_paths = np.array(sorted(self.processed_train_dir.glob('**/*.npy')))
             is_val_data = np.array([self._is_val_data(path) for path in data_paths])
 
-            self.val_dataset = _dataset(
+            self.val_dataset = self._dataset(
                 data_paths=data_paths[is_val_data],
                 use_rgb=self.use_rgb)
         
         # train dataset
         if stage == 'fit':
-            self.train_dataset = _dataset(
+            self.train_dataset = self._dataset(
                 data_paths=data_paths[~is_val_data],
                 use_rgb=self.use_rgb)
 
         # test dataset
         if stage in ('test', 'predict'):
-            self.test_dataset = _dataset(
+            self.test_dataset = self._dataset(
                 data_paths=sorted(self.processed_test_dir.glob('**/*.npy')),
                 use_rgb=self.use_rgb)
 
@@ -302,6 +325,38 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
             mode='constant')
         
         return data
+
+
+class OracleMNISTModuleDummy(OracleMNISTBaseModule):
+    """
+    This data module does not do any preprocessing
+    """
+    data_version_name = 'dummy'
+
+    def process_datapoint(self, data: np.ndarray) -> np.ndarray:
+        raise NotImplementedError()
+    
+    def prepare_data(self) -> None:
+        pass
+
+    def return_dummy(self):
+        return self._dataset(
+            data_paths=[],
+            use_rgb=self.use_rgb,
+            data_shape=(3 if self.use_rgb else 1, 28, 28),
+            num_datapoints=256)
+
+    def setup(self, stage):
+        if stage in ('fit', 'validate'):
+            self.val_dataset = self.return_dummy()
+        if stage == 'fit':
+            self.train_dataset = self.return_dummy()
+        if stage in ('test', 'predict'):
+            self.test_dataset = self.return_dummy()
+
+    @property
+    def _dataset(self) -> OracleMNIST:
+        return OracleMNISTDummy
 
 
 if __name__ == "__main__":
