@@ -12,18 +12,29 @@ class MNISTModule(LightningModule):
     def forward(self, x):
         return self.model(x)
 
-    def training_step(self, batch, batch_idx):
+    def handle_step(self, batch, batch_idx):
         x, y = batch
         y_hat = self(x)
         loss = self.criterion(y_hat, y)
+        acc = (y_hat.argmax(dim=1) == y).float().mean()
+        return loss, acc
+
+    def training_step(self, batch, batch_idx):
+        loss, acc = self.handle_step(batch, batch_idx)
         self.log("train_loss", loss)
+        self.log("train_acc", acc, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        x, y = batch
-        y_hat = self(x)
-        loss = self.criterion(y_hat, y)
+        loss, acc = self.handle_step(batch, batch_idx)
         self.log("val_loss", loss)
+        self.log("val_acc", acc, prog_bar=True)
+        return loss
+    
+    def test_step(self, batch, batch_idx):
+        loss, acc = self.handle_step(batch, batch_idx)
+        self.log("test_loss", loss)
+        self.log("test_acc", acc)
         return loss
 
     def configure_optimizers(self):
