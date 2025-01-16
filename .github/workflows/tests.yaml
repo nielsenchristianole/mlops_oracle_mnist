@@ -35,7 +35,6 @@ jobs:
           pip list
 
 
-      - name: Run tests & coverage
+      - name: Run tests
         run: |
-          coverage run -m pytest tests/
-          coverage report -i -m
+          pytest tests/
