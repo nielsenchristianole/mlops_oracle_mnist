@@ -36,7 +36,11 @@ jobs:
           pip list
 
 
-      - name: Run tests & coverage
+      - name: Run tests
         run: |
-          coverage run -m pytest tests/
-          coverage report -m
+          pytest tests/
+      
+      - name: Check code style 
+        run: |
+          ruff check .
+          ruff format .

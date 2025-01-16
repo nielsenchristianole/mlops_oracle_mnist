@@ -1,5 +1,6 @@
 from pytorch_lightning import LightningModule
 
+
 class MNISTModule(LightningModule):
     def __init__(self, model, optimizer, lr_scheduler, criterion):
         super().__init__()
@@ -26,12 +27,7 @@ class MNISTModule(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        return { # type: ignore
+        return {  # type: ignore
             "optimizer": self.optimizer,
-            "lr_scheduler": {
-                "scheduler": self.lr_scheduler,
-                "interval": "step",
-                "frequency": 1,
-                "name": "lr"
-            }
+            "lr_scheduler": {"scheduler": self.lr_scheduler, "interval": "step", "frequency": 1, "name": "lr"},
         }
