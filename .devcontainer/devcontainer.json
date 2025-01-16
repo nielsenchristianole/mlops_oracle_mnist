@@ -1,0 +1,27 @@
+{
+    "name": "ML Dev Container",
+    "build": {
+      "dockerfile": "../dockerfiles/dev.dockerfile",
+      "context": ".."
+    },
+    "workspaceFolder": "/workspace",
+    "mounts": [
+      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    ],
+    "runArgs": ["--gpus", "all"],
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash",
+          "editor.formatOnSave": true
+        },
+        "extensions": [
+          "ms-python.python",
+          "ms-python.vscode-pylance",
+          "ms-azuretools.vscode-docker"
+        ]
+      }
+    },
+    "postCreateCommand": "pip install -r requirements_dev.txt --no-cache-dir --verbose",
+    "remoteUser": "root"
+  }

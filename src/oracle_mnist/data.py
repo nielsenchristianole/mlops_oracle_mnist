@@ -134,6 +134,7 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         """
         _tmp_path = os.path.join(RAW_DATA_PATH, 'raw.tar.gz')
         _tmp_dir = Path(RAW_DATA_PATH) / 'oracle-mnist-origin'
+        _tmp_dir.mkdir(parents=True, exist_ok=True)
 
         # download
         gdown.download(ONLINE_DATA_URL, _tmp_path)
