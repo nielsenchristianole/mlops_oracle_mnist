@@ -19,6 +19,12 @@ def build_dev(ctx: Context) -> None:
     ctx.run("docker build -t dev:latest . -f dockerfiles/dev.dockerfile", echo=True, pty=not WINDOWS)
 
 
+@task
+def train_docker(ctx: Context) -> None:
+    """Run training docker container."""
+    ctx.run("docker run --rm --gpus all train:latest", echo=True, pty=not WINDOWS)
+
+
 # Setup commands
 @task
 def create_environment(ctx: Context) -> None:
