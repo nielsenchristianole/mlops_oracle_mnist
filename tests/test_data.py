@@ -1,9 +1,8 @@
-from torch.utils.data import Dataset
-
-from oracle_mnist.data import MyDataset
+import pytorch_lightning as pl
+from oracle_mnist.data import OracleMNISTModuleBasic
 
 
 def test_my_dataset():
     """Test the MyDataset class."""
-    dataset = MyDataset("data/raw")
-    assert isinstance(dataset, Dataset)
+    dataset = OracleMNISTModuleBasic("data/raw")
+    assert isinstance(dataset, pl.LightningDataModule)
