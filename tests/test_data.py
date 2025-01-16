@@ -1,25 +1,33 @@
 import unittest
-import numpy as np
 from pathlib import Path
-from src.oracle_mnist.data import OracleMNISTModuleBasic
+from src.oracle_mnist.data import OracleMNIST, OracleMNISTModuleBasic
+import torch
 
-class TestProcessedData(unittest.TestCase):
+
+class TestData(unittest.TestCase):
     def setUp(self):
-        # Set up paths for dummy processed data
-        self.processed_dir = Path("./data/processed/basic_28/train")
-        self.module = OracleMNISTModuleBasic(imsize=28, batch_size=1)
+        self.raw_data_path = Path("data/raw")
+        self.processed_data_path = Path("data/processed/basic_28/train")
+        self.batch_size = 32
 
-    def test_data_dimensions(self):
-        # Prepare dummy data (make sure your processed data exists at the path)
-        self.module.prepare_data()
-        self.module.setup(stage="fit")
-        train_loader = self.module.train_dataloader()
+    def test_dataset_loading(self):
+        dataset = OracleMNIST(data_paths=list(self.processed_data_path.glob("**/*.npy")), use_rgb=True)
+        self.assertGreater(len(dataset), 0, "Dataset is empty.")
+        data, label = dataset[0]
+        self.assertEqual(data.shape, (3, 28, 28), "Data shape is incorrect.")
+        self.assertEqual(data.dtype, torch.float32, "Data type is incorrect.")
+        self.assertTrue(0 <= label < 10, "Label is out of bounds.")
 
-        # Test data dimensions for one batch
-        for x, y in train_loader:
-            self.assertEqual(x.shape, (1, 3, 28, 28))  # Batch size x Channels x Height x Width
-            self.assertEqual(y.shape, (1,))  # Batch size
-            break
+    def test_dataloader(self):
+        data_module = OracleMNISTModuleBasic(batch_size=self.batch_size, in_memory_dataset=False)
+        data_module.prepare_data()
+        data_module.setup("fit")
+        train_loader = data_module.train_dataloader()
+        batch = next(iter(train_loader))
+        x, y = batch
+        self.assertEqual(x.shape, (self.batch_size, 3, 28, 28), "Batch shape is incorrect.")
+        self.assertEqual(y.shape, (self.batch_size,), "Label batch shape is incorrect.")
+        self.assertTrue(torch.is_tensor(x) and torch.is_tensor(y), "Batch is not a tensor.")
 
 if __name__ == "__main__":
     unittest.main()

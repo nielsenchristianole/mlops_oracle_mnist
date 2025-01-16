@@ -18,7 +18,7 @@ import pytorch_lightning as pl
 from torch.utils.data import DataLoader, Dataset
 
 
-RAW_DATA_PATH = './data/raw/'
+RAW_DATA_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'raw'
 ONLINE_DATA_URL = "https://drive.google.com/uc?id=1gPYAOc9CTvrUQFCASW3oz30lGdKBivn5"
 
 
@@ -134,6 +134,7 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         """
         _tmp_path = os.path.join(RAW_DATA_PATH, 'raw.tar.gz')
         _tmp_dir = Path(RAW_DATA_PATH) / 'oracle-mnist-origin'
+        _tmp_dir.mkdir(parents=True, exist_ok=True)
 
         # download
         gdown.download(ONLINE_DATA_URL, _tmp_path)

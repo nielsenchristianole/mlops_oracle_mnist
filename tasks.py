@@ -6,6 +6,25 @@ WINDOWS = os.name == "nt"
 PROJECT_NAME = "oracle_mnist"
 PYTHON_VERSION = "3.11"
 
+# docker commands
+@task
+def build_train(ctx: Context) -> None:
+    """Build docker image for training."""
+    ctx.run("docker build -t train:latest . -f dockerfiles/train.dockerfile", echo=True, pty=not WINDOWS)
+
+
+@task(build_train)
+def build_dev(ctx: Context) -> None:
+    """Build docker image for development."""
+    ctx.run("docker build -t dev:latest . -f dockerfiles/dev.dockerfile", echo=True, pty=not WINDOWS)
+
+
+@task
+def train_docker(ctx: Context) -> None:
+    """Run training docker container."""
+    ctx.run("docker run --rm --gpus all train:latest", echo=True, pty=not WINDOWS)
+
+
 # Setup commands
 @task
 def create_environment(ctx: Context) -> None:
