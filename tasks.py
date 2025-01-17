@@ -80,7 +80,7 @@ def train(ctx: Context) -> None:
 def test(ctx: Context) -> None:
     """Run tests with coverage."""
     ctx.run(
-        "coverage run -m unittest discover -s tests -p 'test_*.py'",
+        "coverage run --source=src -m unittest discover -s tests -p 'test_*.py'",
         echo=True,
         pty=not WINDOWS,
     )
