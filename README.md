@@ -67,7 +67,3 @@ We have chosen to work with a raw hieroglyph dataset consisting of 30,222 ancien
 
 ### Models
 We plan to use several pre-trained CNN models for image classification. We are likely to experiment with different models available in the TIMM framework.
-
-
-
-

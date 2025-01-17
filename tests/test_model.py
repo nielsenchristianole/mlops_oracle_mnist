@@ -1,10 +1,12 @@
 import unittest
+
 import hydra
-from pytorch_lightning import Trainer
-from src.oracle_mnist.modules.train_module import MNISTModule
 import timm
-import torch.nn as nn
 import torch
+import torch.nn as nn
+from pytorch_lightning import Trainer
+
+from src.oracle_mnist.modules.train_module import MNISTModule
 
 
 class TestModel(unittest.TestCase):
@@ -16,7 +18,9 @@ class TestModel(unittest.TestCase):
 
         # Manually correct the _target_ paths for the data module and scheduler
         cls.config.data_loader._target_ = "src.oracle_mnist.data.OracleMNISTModuleBasic"
-        cls.config.train.scheduler._target_ = "src.oracle_mnist.scheduler.sarphiv_scheduler.get_schedular"
+        cls.config.train.scheduler._target_ = (
+            "src.oracle_mnist.scheduler.sarphiv_scheduler.get_schedular"
+        )
 
         # Instantiate the data module
         cls.data_module = hydra.utils.instantiate(cls.config.data_loader)
@@ -27,16 +31,22 @@ class TestModel(unittest.TestCase):
         cls.model = timm.create_model(**cls.config.model)
 
         # Instantiate the optimizer
-        cls.optimizer = hydra.utils.instantiate(cls.config.train.optimizer, params=cls.model.parameters())
+        cls.optimizer = hydra.utils.instantiate(
+            cls.config.train.optimizer, params=cls.model.parameters()
+        )
 
         # Instantiate the scheduler
-        cls.scheduler = hydra.utils.instantiate(cls.config.train.scheduler, optimizer=cls.optimizer)
+        cls.scheduler = hydra.utils.instantiate(
+            cls.config.train.scheduler, optimizer=cls.optimizer
+        )
 
         # Instantiate the criterion
         cls.criterion = nn.CrossEntropyLoss()
 
         # Create the training module
-        cls.train_module = MNISTModule(cls.model, cls.optimizer, cls.scheduler, cls.criterion)
+        cls.train_module = MNISTModule(
+            cls.model, cls.optimizer, cls.scheduler, cls.criterion
+        )
 
     def test_training_one_epoch(self):
         # Run the trainer for one epoch
@@ -57,10 +67,13 @@ class TestModel(unittest.TestCase):
     def test_model_structure(self):
         # Verify the model is initialized correctly
         self.assertEqual(
-            self.model.num_classes, self.config.model.num_classes,
-            "Model's num_classes does not match the configuration."
+            self.model.num_classes,
+            self.config.model.num_classes,
+            "Model's num_classes does not match the configuration.",
         )
-        self.assertTrue(hasattr(self.model, "forward"), "Model does not have a forward method.")
+        self.assertTrue(
+            hasattr(self.model, "forward"), "Model does not have a forward method."
+        )
 
 
 if __name__ == "__main__":
