@@ -3,7 +3,6 @@ import torch.nn as nn
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from oracle_mnist.modules.train_module import MNISTModule
-from oracle_mnist.data import OracleMNISTModuleBasic  # Import the data loading class
 
 import timm
 
@@ -15,20 +14,20 @@ from omegaconf import DictConfig
 def train(cfg : DictConfig) -> None:
     
     seed_everything(cfg.misc.seed)
-    
+
     # Define paths and parameters
     # data_dir = cfg.data.processed_dir
     # batch_size = cfg.train.batch_size
 
     # Initialize the model
     model = timm.create_model(**cfg.model)
-    
+
     data_module = hydra.utils.instantiate(cfg.data_loader)
     optimizer = hydra.utils.instantiate(cfg.train.optimizer, model.parameters())
-    scheduler = hydra.utils.call(cfg.train.scheduler, optimizer = optimizer)
+    scheduler = hydra.utils.call(cfg.train.scheduler, optimizer=optimizer)
     criterion = nn.CrossEntropyLoss()
 
-    train_module = MNISTModule(model, optimizer, scheduler, criterion)    
+    train_module = MNISTModule(model, optimizer, scheduler, criterion)
 
     model_checkpoint = ModelCheckpoint(
         filename='best',
