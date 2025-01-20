@@ -3,7 +3,7 @@ from pathlib import Path
 
 import torch
 
-from src.oracle_mnist.data import OracleMNIST, OracleMNISTModuleBasic
+from src.oracle_mnist.data import OracleMNISTDummy, OracleMNISTModuleDummy
 
 
 class TestData(unittest.TestCase):
@@ -13,8 +13,8 @@ class TestData(unittest.TestCase):
         self.batch_size = 32
 
     def test_dataset_loading(self):
-        dataset = OracleMNIST(
-            data_paths=list(self.processed_data_path.glob("**/*.npy")), use_rgb=True
+        dataset = OracleMNISTDummy(
+            data_paths=list(self.processed_data_path.glob("**/*.npy")), use_rgb=True, data_shape=(3, 28, 28), num_datapoints=1
         )
         self.assertGreater(len(dataset), 0, "Dataset is empty.")
         data, label = dataset[0]
@@ -23,7 +23,7 @@ class TestData(unittest.TestCase):
         self.assertTrue(0 <= label < 10, "Label is out of bounds.")
 
     def test_dataloader(self):
-        data_module = OracleMNISTModuleBasic(
+        data_module = OracleMNISTModuleDummy(
             batch_size=self.batch_size, in_memory_dataset=False
         )
         data_module.prepare_data()

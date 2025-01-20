@@ -67,3 +67,27 @@ We have chosen to work with a raw hieroglyph dataset consisting of 30,222 ancien
 
 ### Models
 We plan to use several pre-trained CNN models for image classification. We are likely to experiment with different models available in the TIMM framework.
+
+
+# Installation
+
+This repository uses Conda to manage the virtual environment. If you are not using Conda, you most manually install the requirements in the ``requirements.txt`` file.
+
+To install using Conda, make sure that ``invoke`` is installed in the ``base``-environment. If not, please run:
+```
+pip install invoke
+```
+
+We recommend running the repository from inside a Docker container.
+With ``invoke`` installed, just run 
+```
+invoke docker_build
+```
+
+# Logging with Weights and Biases
+To set up logging with weights and biases, insert an API key in a ``.env`` file. 
+The file should then have the following structure
+```
+WANDB_API_KEY=<your-api-key>
+```
+It is also possible to logging through the terminal, in the case where a API key is not configured.

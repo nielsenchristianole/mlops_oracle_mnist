@@ -9,7 +9,7 @@ from typing import Literal, Optional
 import cv2
 import gdown
 import numpy as np
-import pytorch_lightning as pl
+import lightning as L
 import torch
 import tqdm
 from PIL import Image
@@ -87,7 +87,7 @@ class OracleMNISTDummy(OracleMNIST):
         return self.num_datapoints
 
 
-class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
+class OracleMNISTBaseModule(ABC, L.LightningDataModule):
     """
     This is the base class for the Oracle MNIST dataset
 
@@ -257,6 +257,7 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         """
         assert self.train_dataset is not None, "Val dataset is not set"
         kwargs = dict(shuffle=False) | self.dataloader_kwargs
+        print(kwargs)
         return DataLoader(self.val_dataset, **kwargs)
 
     def test_dataloader(self):
@@ -282,6 +283,7 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
         super().__init__(*args, **kwargs)
 
         self.im_size = imsize
+        print("here we are doing something with imsize")
 
     def process_datapoint(self, data: np.ndarray) -> np.ndarray:
         # Negating the intensities of the image if its foreground is darker than the background.

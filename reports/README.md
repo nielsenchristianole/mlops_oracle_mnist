@@ -57,8 +57,8 @@ will check the repositories and the code to verify your answers.
 * [x] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
 * [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
-* [x] Do a bit of code typing and remember to document essential parts of your code (M7)
-* [x] Setup version control for your data or part of your data (M8)
+* [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
+* [ ] Setup version control for your data or part of your data (M8)
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 * [x] Construct one or multiple docker files for your code (M10)
 * [x] Build the docker files locally and make sure they work as intended (M10)
@@ -163,7 +163,7 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 4 fill here ---
+We kept our dependencies up to date by using and keeping update the requirements.txt file. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker devolopment image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
 
 ### Question 5
 
@@ -179,7 +179,7 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 5 fill here ---
+For the most part, we kept our selves constrained to the cookie-cutter format. We did not make use of the visualize.py and evalaute.py file as we made use of wanb for logging/visualization/evalutaion.
 
 ### Question 6
 
