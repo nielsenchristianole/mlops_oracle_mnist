@@ -8,6 +8,12 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 
 # Import the data loading class
 from oracle_mnist.modules.train_module import MNISTModule
+from oracle_mnist.data import OracleMNISTModuleBasic  # Import the data loading class
+
+import timm
+
+import hydra
+from omegaconf import DictConfig
 
 
 @hydra.main(config_path="../../configs", config_name="config", version_base=None)

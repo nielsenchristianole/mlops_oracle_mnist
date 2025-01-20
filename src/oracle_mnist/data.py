@@ -161,11 +161,9 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         Change the data version name in the path
         """
         self.processed_train_dir = Path(
-            str(self.processed_train_dir).format(data_version_name=data_version_name)
-        )
+            str(self.processed_train_dir).format(data_version_name=data_version_name))
         self.processed_test_dir = Path(
-            str(self.processed_test_dir).format(data_version_name=data_version_name)
-        )
+            str(self.processed_test_dir).format(data_version_name=data_version_name))
 
     def prepare_data(self) -> None:
         """
@@ -223,9 +221,6 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         """
         This is run once on each process in distributed training
         """
-        # _dataset is assigned but never used (flake8) Jeg lader den lige blive
-        # incase det er noget der skulle bruges i fremtiden
-        # _dataset = OracleMNISTInMemory if self.in_memory_dataset else OracleMNIST
 
         # val dataset
         if stage in ("fit", "validate"):
@@ -233,21 +228,20 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
             is_val_data = np.array([self._is_val_data(path) for path in data_paths])
 
             self.val_dataset = self._dataset(
-                data_paths=data_paths[is_val_data], use_rgb=self.use_rgb
-            )
-
+                data_paths=data_paths[is_val_data],
+                use_rgb=self.use_rgb)
+        
         # train dataset
-        if stage == "fit":
+        if stage == 'fit':
             self.train_dataset = self._dataset(
-                data_paths=data_paths[~is_val_data], use_rgb=self.use_rgb
-            )
+                data_paths=data_paths[~is_val_data],
+                use_rgb=self.use_rgb)
 
         # test dataset
         if stage in ("test", "predict"):
             self.test_dataset = self._dataset(
-                data_paths=sorted(self.processed_test_dir.glob("**/*.npy")),
-                use_rgb=self.use_rgb,
-            )
+                data_paths=sorted(self.processed_test_dir.glob('**/*.npy')),
+                use_rgb=self.use_rgb)
 
     def train_dataloader(self):
         """

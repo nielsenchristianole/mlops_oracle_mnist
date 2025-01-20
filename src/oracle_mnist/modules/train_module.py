@@ -44,6 +44,6 @@ class MNISTModule(LightningModule):
                 "scheduler": self.lr_scheduler,
                 "interval": "step",
                 "frequency": 1,
-                "name": "lr",
-            },
+                "name": "lr"
+            }
         }

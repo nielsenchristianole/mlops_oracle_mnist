@@ -70,6 +70,7 @@ def preprocess_data(ctx: Context) -> None:
     )
 
 
+
 @task
 def train(ctx: Context) -> None:
     """Train model."""
@@ -98,9 +99,8 @@ def docker_build(ctx: Context, progress: str = "plain") -> None:
     ctx.run(
         f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}",
         echo=True,
-        pty=not WINDOWS,
+        pty=not WINDOWS
     )
-
 
 # Documentation commands
 @task(dev_requirements)

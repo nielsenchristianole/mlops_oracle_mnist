@@ -36,6 +36,4 @@ jobs:
 
       - name: Run Unit Tests with Coverage
         run: |
-          coverage run --source=src -m unittest discover -s tests -p "test_*.py"
-          coverage report -m
-          coverage xml
+          python -m unittest discover tests
