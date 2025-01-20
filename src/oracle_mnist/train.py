@@ -26,19 +26,15 @@ def train(cfg: DictConfig) -> None:
     seed_everything(cfg.misc.seed)
     torch.set_float32_matmul_precision(cfg.misc.precision)
     
-    # Define paths and parameters
-    # data_dir = cfg.data.processed_dir
-    # batch_size = cfg.train.batch_size
-
-    # Initialize the model
-    model = timm.create_model(**cfg.model)
 
     data_module = hydra.utils.instantiate(cfg.data_loader)
-    optimizer = hydra.utils.instantiate(cfg.train.optimizer, model.parameters())
-    scheduler = hydra.utils.call(cfg.train.scheduler, optimizer=optimizer)
     criterion = torch.nn.functional.cross_entropy
 
-    train_module = MNISTModule(model, optimizer, scheduler, criterion)
+    train_module = MNISTModule(
+        timm_model_kwargs=cfg.model,
+        optimizer_kwargs=cfg.train.optimizer,
+        lr_scheduler_kwargs=cfg.train.scheduler,
+        criterion=criterion)
 
     model_input_shape = (
         1,
@@ -50,7 +46,6 @@ def train(cfg: DictConfig) -> None:
         filename="best", monitor="val_acc", save_top_k=1, save_last=True, mode="max"
     )
     callbacks = [model_checkpoint]
-
     
     ### Initialize wandb
     
@@ -72,11 +67,14 @@ def train(cfg: DictConfig) -> None:
     trainer.test(
         ckpt_path=model_checkpoint.best_model_path,
         model=train_module,
-        datamodule=data_module,
-    )
+        datamodule=data_module)
+    
+    # Export to onnx
+    export_model = train_module.__class__.load_from_checkpoint(model_checkpoint.best_model_path).eval() # TODO replace with better way to load model
+    export_model.to_onnx(
+        file_path=Path(model_checkpoint.best_model_path).with_suffix('.onnx'),
+        input_sample=torch.randn(*model_input_shape))
 
-    # TODO: export to onnx
-    # train_module.load_from_checkpoint(model_checkpoint.best_model_path)
 
 
 if __name__ == "__main__":
