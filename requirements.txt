@@ -19,3 +19,4 @@ onnx==1.17.0
 onnxruntime==1.20.1
 onnxscript==0.1.0.dev20250117
 lightning[extra]==2.5.0.post0
+python-dotenv==1.0.1

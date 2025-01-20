@@ -14,10 +14,12 @@ import timm
 
 import hydra
 from omegaconf import DictConfig
+from dotenv import load_dotenv
 import wandb
 import os
 
 PROJECT_NAME = "oracle_mnist"
+load_dotenv() # Load the .env file
 
 @hydra.main(config_path="../../configs", config_name="config", version_base=None)
 def train(cfg: DictConfig) -> None:
@@ -49,19 +51,20 @@ def train(cfg: DictConfig) -> None:
     )
     callbacks = [model_checkpoint]
 
+    
+    ### Initialize wandb
+    
+    if wandb_api_key := os.getenv("WANDB_API_KEY"):
+        wandb.login(key=wandb_api_key)
+    else:
+        print("No API key found in environment variables. Logging in manually:")
+        wandb.login()
+
     # Use Lightning Trainer
     trainer = Trainer(max_epochs=cfg.train.epochs,
                       callbacks=callbacks,
                       accelerator="gpu" if torch.cuda.is_available() else "cpu",
-                      logger=WandbLogger(project=PROJECT_NAME, config=cfg))
-    
-    ### Initialize wandb
-    wandb_api_key = os.getenv("WANDB_API_KEY")
-    
-    if wandb_api_key:
-        wandb.login(key=wandb_api_key)
-    else:
-        wandb.login()
+                      logger=WandbLogger(project=PROJECT_NAME))
         
     trainer.fit(train_module, data_module)
 
