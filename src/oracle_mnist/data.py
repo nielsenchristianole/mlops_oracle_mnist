@@ -15,6 +15,7 @@ import tqdm
 from PIL import Image
 from skimage.filters import threshold_otsu
 from torch.utils.data import DataLoader, Dataset
+from oracle_mnist.utils.data_utils import normalize_data
 
 RAW_DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "raw"
 ONLINE_DATA_URL = "https://drive.google.com/uc?id=1gPYAOc9CTvrUQFCASW3oz30lGdKBivn5"
@@ -283,7 +284,6 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
         super().__init__(*args, **kwargs)
 
         self.im_size = imsize
-        print("here we are doing something with imsize")
 
     def process_datapoint(self, data: np.ndarray) -> np.ndarray:
         # Negating the intensities of the image if its foreground is darker than the background.
@@ -314,6 +314,8 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
             ),
             mode="constant",
         )
+
+        data = normalize_data(data)
 
         return data
 
