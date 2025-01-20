@@ -4,7 +4,7 @@ import hydra
 import timm
 import torch
 import torch.nn as nn
-from pytorch_lightning import Trainer
+from lightning import Trainer
 
 from src.oracle_mnist.modules.train_module import MNISTModule
 

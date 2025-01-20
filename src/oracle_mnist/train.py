@@ -2,12 +2,12 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 from omegaconf import DictConfig
-from pytorch_lightning import Trainer, seed_everything
-from pytorch_lightning.callbacks import ModelCheckpoint
+from lightning import Trainer, seed_everything
+from lightning.pytorch.callbacks import ModelCheckpoint
 
 # Import the data loading class
 from oracle_mnist.modules.train_module import MNISTModule
-from pytorch_lightning.loggers import WandbLogger
+from lightning.pytorch.loggers import WandbLogger
 from oracle_mnist.data import OracleMNISTModuleBasic  # Import the data loading class
 
 import timm
