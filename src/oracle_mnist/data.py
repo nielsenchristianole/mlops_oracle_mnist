@@ -9,7 +9,7 @@ from typing import Literal, Optional
 import cv2
 import gdown
 import numpy as np
-import pytorch_lightning as pl
+import lightning as L
 import torch
 import tqdm
 from PIL import Image
@@ -87,7 +87,7 @@ class OracleMNISTDummy(OracleMNIST):
         return self.num_datapoints
 
 
-class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
+class OracleMNISTBaseModule(ABC, L.LightningDataModule):
     """
     This is the base class for the Oracle MNIST dataset
 

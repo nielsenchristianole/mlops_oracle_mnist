@@ -78,28 +78,16 @@ To install using Conda, make sure that ``invoke`` is installed in the ``base``-e
 pip install invoke
 ```
 
-## Using Docker (recommended)
-
-We recommend running the repository from inside a Docker container. If Docker is not an option please refeer to "Installation/Without Docker (not recommended)" 
-
+We recommend running the repository from inside a Docker container.
 With ``invoke`` installed, just run 
 ```
 invoke docker_build
 ```
 
-If the installation fails, please run the following command to clean up your Docker.
+# Logging with Weights and Biases
+To set up logging with weights and biases, insert an API key in a ``.env`` file. 
+The file should then have the following structure
 ```
-
+WANDB_API_KEY=<your-api-key>
 ```
-
-
-
-
-## Without Docker (not recommended)
-
-
-## User-specific post-installation
-After installing difference user-specific changes is recommended.
-
-### Logging with Weights and Biases
-To set up logging with weights and biases, insert an API key in the ``.env`` file. 
+It is also possible to logging through the terminal, in the case where a API key is not configured.

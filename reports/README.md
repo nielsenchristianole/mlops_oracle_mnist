@@ -163,7 +163,8 @@ The TIMM framework seems like the optimal choice for this project. However in th
 >
 > Answer:
 
-We kept our dependencies up to date by using and keeping update the requirements.txt file. We did not use any auto generation of the file, but added dependencies as they became necessary. We also made use of a docker devolopment image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
+We kept our dependencies up to date by using and keeping update the requirements.txt file. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker devolopment image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
+
 
 ### Question 5
 
@@ -339,7 +340,11 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 >
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
+> *training docker image: `docker run trainer:latest lr
+  
+  
+  
+  1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
 

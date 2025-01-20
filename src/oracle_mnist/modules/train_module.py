@@ -1,5 +1,5 @@
+from lightning import LightningModule
 from typing import Callable
-from pytorch_lightning import LightningModule
 import torch
 import timm
 import hydra

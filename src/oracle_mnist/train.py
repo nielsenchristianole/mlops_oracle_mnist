@@ -2,12 +2,12 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 from omegaconf import DictConfig
-from pytorch_lightning import Trainer, seed_everything
-from pytorch_lightning.callbacks import ModelCheckpoint
+from lightning import Trainer, seed_everything
+from lightning.pytorch.callbacks import ModelCheckpoint
 
 # Import the data loading class
 from oracle_mnist.modules.train_module import MNISTModule
-from pytorch_lightning.loggers import WandbLogger
+from lightning.pytorch.loggers import WandbLogger, Logger, TensorBoardLogger
 from oracle_mnist.data import OracleMNISTModuleBasic  # Import the data loading class
 
 import timm
@@ -49,17 +49,22 @@ def train(cfg: DictConfig) -> None:
     
     ### Initialize wandb
     
-    if wandb_api_key := os.getenv("WANDB_API_KEY"):
-        wandb.login(key=wandb_api_key)
-    else:
-        print("No API key found in environment variables. Logging in manually:")
-        wandb.login()
+    logger : Logger|None = None
+    
+    if cfg.misc.wandb_logging:
+        if wandb_api_key := os.getenv("WANDB_API_KEY"):
+            wandb.login(key=wandb_api_key)
+        else:
+            print("No API key found in environment variables. Logging in manually:")
+            wandb.login()
+        
+        logger = WandbLogger(project=PROJECT_NAME)
 
     # Use Lightning Trainer
     trainer = Trainer(max_epochs=cfg.train.epochs,
-                      callbacks=callbacks,
-                      accelerator="gpu" if torch.cuda.is_available() else "cpu",
-                      logger=WandbLogger(project=PROJECT_NAME))
+                    callbacks=callbacks,
+                    accelerator="gpu" if torch.cuda.is_available() else "cpu",
+                    logger=logger)
         
     trainer.fit(train_module, data_module)
 
