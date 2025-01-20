@@ -30,7 +30,7 @@ class MNISTModule(LightningModule):
         self.log("val_loss", loss)
         self.log("val_acc", acc, prog_bar=True)
         return loss
-    
+
     def test_step(self, batch, batch_idx):
         loss, acc = self.handle_step(batch, batch_idx)
         self.log("test_loss", loss)
@@ -40,5 +40,10 @@ class MNISTModule(LightningModule):
     def configure_optimizers(self):
         return {  # type: ignore
             "optimizer": self.optimizer,
-            "lr_scheduler": {"scheduler": self.lr_scheduler, "interval": "step", "frequency": 1, "name": "lr"},
+            "lr_scheduler": {
+                "scheduler": self.lr_scheduler,
+                "interval": "step",
+                "frequency": 1,
+                "name": "lr"
+            }
         }

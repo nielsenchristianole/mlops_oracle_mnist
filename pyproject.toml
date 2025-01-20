@@ -25,11 +25,16 @@ dependencies = {file = ["requirements.txt"]}
 [tool.setuptools.dynamic.optional-dependencies]
 dev = {file = ['requirements_dev.txt']}
 
-[tool.ruff]
-line-length = 120
+[tool.flake8]
+max-line-length = 110
+
+[tool.black]
+line-length = 110
 
 [tool.coverage.run]
+source = ["src"]
 omit = ["tests/*"]
+
 
 [project.scripts]
 preprocess = "oracle_mnist.data:preprocess"
