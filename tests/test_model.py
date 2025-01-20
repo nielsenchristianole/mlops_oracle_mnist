@@ -23,6 +23,8 @@ class TestModel(unittest.TestCase):
         )
 
         # Instantiate the data module
+        # remove imsize, as its not needed to dummy data loader
+        del cls.config.data_loader.imsize
         print(cls.config.data_loader)
         cls.data_module = hydra.utils.instantiate(cls.config.data_loader)
         cls.data_module.prepare_data()
