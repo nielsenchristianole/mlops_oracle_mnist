@@ -257,6 +257,7 @@ class OracleMNISTBaseModule(ABC, pl.LightningDataModule):
         """
         assert self.train_dataset is not None, "Val dataset is not set"
         kwargs = dict(shuffle=False) | self.dataloader_kwargs
+        print(kwargss)
         return DataLoader(self.val_dataset, **kwargs)
 
     def test_dataloader(self):
