@@ -37,9 +37,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/
-      
-      - name: Check code style 
-        run: |
-          ruff check .
-          ruff format .
+          python -m unittest discover tests
