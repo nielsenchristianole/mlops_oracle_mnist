@@ -81,7 +81,7 @@ will check the repositories and the code to verify your answers.
 * [x] Add pre-commit hooks to your version control setup (M18)
 * [x] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
+* [(x)] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [ ] Create a FastAPI application that can do inference using your model (M22)
@@ -401,6 +401,7 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 > 
 We did not choose to use a GCP bucket, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented a GCP bucket.
 
+--- question 19 fill here ---
 
 ### Question 20
 
