@@ -58,28 +58,28 @@ will check the repositories and the code to verify your answers.
     are using (M2+M6)
 * [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
 * [x] Do a bit of code typing and remember to document essential parts of your code (M7)
-* [ ] Setup version control for your data or part of your data (M8)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [x] Setup version control for your data or part of your data (M8)
+* [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 * [x] Construct one or multiple docker files for your code (M10)
 * [x] Build the docker files locally and make sure they work as intended (M10)
 * [x] Write one or multiple configurations files for your experiments (M11)
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
 * [ ] Use profiling to optimize your code (M12)
-* [ ] Use logging to log important events in your code (M14)
+* [x] Use logging to log important events in your code (M14)
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [ ] Consider running a hyperparameter optimization sweep (M14)
 * [x] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code (M16)
-* [ ] Write unit tests related to model construction and or model training (M16)
+* [x] Write unit tests related to the data part of your code (M16)
+* [x] Write unit tests related to model construction and or model training (M16)
 * [ ] Calculate the code coverage (M16)
-* [ ] Get some continuous integration running on the GitHub repository (M17)
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
-* [ ] Add a linting step to your continuous integration (M17)
-* [ ] Add pre-commit hooks to your version control setup (M18)
-* [ ] Add a continues workflow that triggers when data changes (M19)
+* [x] Get some continuous integration running on the GitHub repository (M17)
+* [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [x] Add a linting step to your continuous integration (M17)
+* [x] Add pre-commit hooks to your version control setup (M18)
+* [x] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
@@ -243,7 +243,8 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 9 fill here ---
+We were a little relaxed on our use of branches and PRs. Initially when making the first changes, and not very complicated changes, we commited directly to main. As we started to do more individual development, we made branches and subsequently made PR. One could argue that it would have been smarter to have been stricter with branches and PRs from the start, as looking backwards, it would make the versioning more clear.
+
 
 ### Question 10
 
@@ -258,7 +259,7 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 10 fill here ---
+We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented DVC.
 
 ### Question 11
 
@@ -275,7 +276,8 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 11 fill here ---
+In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_*.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requiments file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to join use many more packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <LINK>*.
+
 
 ## Running code and tracking experiments
 
