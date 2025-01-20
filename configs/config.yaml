@@ -37,3 +37,4 @@ train:
 misc:
   seed: 42
   precision: medium
+  wandb_logging: false
