@@ -1,5 +1,4 @@
-import hydra
-import timm
+from pathlib import Path
 import torch
 import torch.nn as nn
 from omegaconf import DictConfig
@@ -19,7 +18,8 @@ from omegaconf import DictConfig
 @hydra.main(config_path="../../configs", config_name="config", version_base=None)
 def train(cfg: DictConfig) -> None:
     seed_everything(cfg.misc.seed)
-
+    torch.set_float32_matmul_precision(cfg.misc.precision)
+    
     # Define paths and parameters
     # data_dir = cfg.data.processed_dir
     # batch_size = cfg.train.batch_size
@@ -30,9 +30,15 @@ def train(cfg: DictConfig) -> None:
     data_module = hydra.utils.instantiate(cfg.data_loader)
     optimizer = hydra.utils.instantiate(cfg.train.optimizer, model.parameters())
     scheduler = hydra.utils.call(cfg.train.scheduler, optimizer=optimizer)
-    criterion = nn.CrossEntropyLoss()
+    criterion = torch.nn.functional.cross_entropy
 
     train_module = MNISTModule(model, optimizer, scheduler, criterion)
+
+    model_input_shape = (
+        1,
+        3 if cfg.data_loader.use_rgb else 1,
+        cfg.data_loader.imsize,
+        cfg.data_loader.imsize)
 
     model_checkpoint = ModelCheckpoint(
         filename="best", monitor="val_acc", save_top_k=1, save_last=True, mode="max"

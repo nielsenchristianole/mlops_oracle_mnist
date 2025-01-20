@@ -1,9 +1,13 @@
 from pytorch_lightning import LightningModule
+import torch
+
 
 
 class MNISTModule(LightningModule):
-    def __init__(self, model, optimizer, lr_scheduler, criterion):
+
+    def __init__(self, model: torch.nn.Module, optimizer, lr_scheduler, criterion):
         super().__init__()
+        self.save_hyperparameters(ignore=['model'])
         self.model = model
         self.optimizer = optimizer
         self.lr_scheduler = lr_scheduler
