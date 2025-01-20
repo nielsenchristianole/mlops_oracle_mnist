@@ -64,7 +64,12 @@ def dev_requirements(ctx: Context) -> None:
 @task
 def preprocess_data(ctx: Context) -> None:
     """Preprocess data."""
-    ctx.run(f"python src/{PROJECT_NAME}/data.py data/raw data/processed", echo=True, pty=not WINDOWS)
+    ctx.run(
+        f"python src/{PROJECT_NAME}/data.py",
+        echo=True,
+        pty=not WINDOWS,
+    )
+
 
 
 @task
@@ -75,8 +80,12 @@ def train(ctx: Context) -> None:
 
 @task
 def test(ctx: Context) -> None:
-    """Run tests."""
-    ctx.run("coverage run -m pytest tests/", echo=True, pty=not WINDOWS)
+    """Run tests with coverage."""
+    ctx.run(
+        "coverage run --source=src -m unittest discover -s tests -p 'test_*.py'",
+        echo=True,
+        pty=not WINDOWS,
+    )
     ctx.run("coverage report -m", echo=True, pty=not WINDOWS)
 
 
@@ -85,7 +94,11 @@ def test(ctx: Context) -> None:
 @task(dev_requirements)
 def build_docs(ctx: Context) -> None:
     """Build documentation."""
-    ctx.run("mkdocs build --config-file docs/mkdocs.yaml --site-dir build", echo=True, pty=not WINDOWS)
+    ctx.run(
+        "mkdocs build --config-file docs/mkdocs.yaml --site-dir build",
+        echo=True,
+        pty=not WINDOWS,
+    )
 
 
 @task(dev_requirements)

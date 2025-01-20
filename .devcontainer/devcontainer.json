@@ -22,6 +22,6 @@
         ]
       }
     },
-    "postCreateCommand": "pip install -r requirements_dev.txt --no-cache-dir --verbose",
+    "postCreateCommand": "pip install -r requirements_dev.txt --no-cache-dir --verbose && pip install -e . --no-cache-dir --verbose",
     "remoteUser": "root"
   }

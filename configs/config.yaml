@@ -15,6 +15,7 @@ data_loader:
   in_memory_dataset: false
   val_split: 0.2
   use_rgb: true
+  imsize: 28
 
 train:
   optimizer:
@@ -35,3 +36,4 @@ train:
 
 misc:
   seed: 42
+  precision: medium
