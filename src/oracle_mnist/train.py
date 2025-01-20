@@ -3,12 +3,16 @@ import torch.nn as nn
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from oracle_mnist.modules.train_module import MNISTModule
+from pytorch_lightning.loggers import WandbLogger
 
 import timm
 
 import hydra
 from omegaconf import DictConfig
+import wandb
+import os
 
+PROJECT_NAME = "oracle_mnist"
 
 @hydra.main(config_path = "../../configs", config_name = "config", version_base=None)
 def train(cfg : DictConfig) -> None:
@@ -40,7 +44,17 @@ def train(cfg : DictConfig) -> None:
     # Use Lightning Trainer
     trainer = Trainer(max_epochs=cfg.train.epochs,
                       callbacks=callbacks,
-                      accelerator="gpu" if torch.cuda.is_available() else "cpu")
+                      accelerator="gpu" if torch.cuda.is_available() else "cpu",
+                      logger=WandbLogger(project=PROJECT_NAME, config=cfg))
+    
+    ### Initialize wandb
+    wandb_api_key = os.getenv("WANDB_API_KEY")
+    
+    if wandb_api_key:
+        wandb.login(key=wandb_api_key)
+    else:
+        wandb.login()
+    
     trainer.fit(train_module, data_module)
 
     # test
