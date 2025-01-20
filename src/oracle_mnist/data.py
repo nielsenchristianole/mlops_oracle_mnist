@@ -283,6 +283,7 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
         super().__init__(*args, **kwargs)
 
         self.im_size = imsize
+        print("here we are doing something with imsize")
 
     def process_datapoint(self, data: np.ndarray) -> np.ndarray:
         # Negating the intensities of the image if its foreground is darker than the background.

@@ -23,6 +23,7 @@ class TestModel(unittest.TestCase):
         )
 
         # Instantiate the data module
+        print(cls.config.data_loader)
         cls.data_module = hydra.utils.instantiate(cls.config.data_loader)
         cls.data_module.prepare_data()
         cls.data_module.setup("fit")
