@@ -11,13 +11,21 @@ PYTHON_VERSION = "3.11"
 @task
 def build_train(ctx: Context) -> None:
     """Build docker image for training."""
-    ctx.run("docker build -t train:latest . -f dockerfiles/train.dockerfile", echo=True, pty=not WINDOWS)
+    ctx.run(
+        "docker build -t train:latest . -f dockerfiles/train.dockerfile",
+        echo=True,
+        pty=not WINDOWS,
+    )
 
 
 @task(build_train)
 def build_dev(ctx: Context) -> None:
     """Build docker image for development."""
-    ctx.run("docker build -t dev:latest . -f dockerfiles/dev.dockerfile", echo=True, pty=not WINDOWS)
+    ctx.run(
+        "docker build -t dev:latest . -f dockerfiles/dev.dockerfile",
+        echo=True,
+        pty=not WINDOWS,
+    )
 
 
 @task
@@ -55,7 +63,12 @@ def dev_requirements(ctx: Context) -> None:
 @task
 def preprocess_data(ctx: Context) -> None:
     """Preprocess data."""
-    ctx.run(f"python src/{PROJECT_NAME}/data.py data/raw data/processed", echo=True, pty=not WINDOWS)
+    ctx.run(
+        f"python src/{PROJECT_NAME}/data.py data/raw data/processed",
+        echo=True,
+        pty=not WINDOWS,
+    )
+
 
 
 @task
@@ -66,8 +79,12 @@ def train(ctx: Context) -> None:
 
 @task
 def test(ctx: Context) -> None:
-    """Run tests."""
-    ctx.run("coverage run -m pytest tests/", echo=True, pty=not WINDOWS)
+    """Run tests with coverage."""
+    ctx.run(
+        "coverage run --source=src -m unittest discover -s tests -p 'test_*.py'",
+        echo=True,
+        pty=not WINDOWS,
+    )
     ctx.run("coverage report -m", echo=True, pty=not WINDOWS)
 
 
@@ -80,15 +97,20 @@ def docker_build(ctx: Context, progress: str = "plain") -> None:
         pty=not WINDOWS,
     )
     ctx.run(
-        f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}", echo=True, pty=not WINDOWS
+        f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}",
+        echo=True,
+        pty=not WINDOWS
     )
-
 
 # Documentation commands
 @task(dev_requirements)
 def build_docs(ctx: Context) -> None:
     """Build documentation."""
-    ctx.run("mkdocs build --config-file docs/mkdocs.yaml --site-dir build", echo=True, pty=not WINDOWS)
+    ctx.run(
+        "mkdocs build --config-file docs/mkdocs.yaml --site-dir build",
+        echo=True,
+        pty=not WINDOWS,
+    )
 
 
 @task(dev_requirements)

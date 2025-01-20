@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Pre-commit and Unit Tests
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          cache: pip
 
       - name: Install dependencies
         run: |
@@ -34,7 +34,8 @@ jobs:
           pip install .
           pip list
 
-
-      - name: Run tests
+      - name: Run Unit Tests with Coverage
         run: |
-          python -m unittest discover tests
+          coverage run --source=src -m unittest discover -s tests -p "test_*.py"
+          coverage report -m
+          coverage xml
