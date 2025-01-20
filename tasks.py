@@ -17,16 +17,11 @@ def build_train(ctx: Context, progress: str = "plain") -> None:
     
 
 @task
-def build_api(ctx: Context, progress: str = "plain") -> None:
-    """Build docker images."""
-    ctx.run(
-        f"invoke build_train --progress {progress}",
-        echo=True,
-        pty=not WINDOWS,
-    )
-    ctx.run(
-        f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}", echo=True, pty=not WINDOWS
-    )
+def build_backend(ctx: Context, progress: str = "plain") -> None:
+    """Build docker image for backend."""
+    ctx.run(f"docker build -t backend:latest . -f dockerfiles/backend.dockerfile --progress={progress}",
+            echo=True,
+            pty=not WINDOWS)
 
 
 @task
@@ -44,6 +39,21 @@ def train_docker(ctx: Context, no_gpu: bool=False) -> None:
 
     if not no_gpu:
         command.append("--gpus all")
+    
+    command.append("train:latest")
+    ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
+
+
+@task
+def serve_docker(ctx: Context, model_version: int=0) -> None:
+    """Run training docker container."""
+
+    command = [
+        "docker",
+        "run",
+        "--rm",
+        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/workspace/model.onnx", # Mount the model
+    ]
     
     command.append("train:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)

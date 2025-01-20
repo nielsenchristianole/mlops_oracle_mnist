@@ -1,14 +1,14 @@
 {
     "name": "ML Dev Container",
     "build": {
-      "dockerfile": "../dockerfiles/dev.dockerfile",
-      "context": ".."
+      "dockerfile": "../../dockerfiles/dev.dockerfile",
+      "context": "../.."
     },
     "workspaceFolder": "/workspace",
     "mounts": [
       "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
     ],
-    //"runArgs": ["--gpus", "all"],
+    "runArgs": ["--gpus", "all"],
     "customizations": {
       "vscode": {
         "settings": {
@@ -22,6 +22,6 @@
         ]
       }
     },
-    "postCreateCommand": "pip install -r requirements_dev.txt --no-cache-dir --verbose && pip install -e . --no-cache-dir --verbose",
+    "postCreateCommand": "pip install -e . --no-cache-dir --verbose",
     "remoteUser": "root"
   }
