@@ -17,12 +17,15 @@ class TestModel(unittest.TestCase):
             cls.config = hydra.compose(config_name="config")
 
         # Manually correct the _target_ paths for the data module and scheduler
-        cls.config.data_loader._target_ = "src.oracle_mnist.data.OracleMNISTModuleBasic"
+        cls.config.data_loader._target_ = "src.oracle_mnist.data.OracleMNISTModuleDummy"
         cls.config.train.scheduler._target_ = (
             "src.oracle_mnist.scheduler.sarphiv_scheduler.get_schedular"
         )
 
         # Instantiate the data module
+        # remove imsize, as its not needed to dummy data loader
+        del cls.config.data_loader.imsize
+        print(cls.config.data_loader)
         cls.data_module = hydra.utils.instantiate(cls.config.data_loader)
         cls.data_module.prepare_data()
         cls.data_module.setup("fit")
