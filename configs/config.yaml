@@ -15,6 +15,7 @@ data_loader:
   in_memory_dataset: false
   val_split: 0.2
   use_rgb: true
+  imsize: 28
 
 train:
   optimizer:
@@ -31,7 +32,8 @@ train:
     lr_warmup_max: 4e-2
     lr_warmup_period: 1000
   batch_size: 32
-  epochs: 3
+  epochs: 10
 
 misc:
   seed: 42
+  precision: medium

@@ -64,7 +64,7 @@ def dev_requirements(ctx: Context) -> None:
 def preprocess_data(ctx: Context) -> None:
     """Preprocess data."""
     ctx.run(
-        f"python src/{PROJECT_NAME}/data.py data/raw data/processed",
+        f"python src/{PROJECT_NAME}/data.py",
         echo=True,
         pty=not WINDOWS,
     )

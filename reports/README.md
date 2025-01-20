@@ -243,7 +243,8 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 9 fill here ---
+We were a little relaxed on our use of branches and PRs. Initially when making the first changes, and not very complicated changes, we commited directly to main. As we started to do more individual development, we made branches and subsequently made PR. One could argue that it would have been smarter to have been stricter with branches and PRs from the start, as looking backwards, it would make the versioning more clear.
+
 
 ### Question 10
 
@@ -258,7 +259,7 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 10 fill here ---
+We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented DVC.
 
 ### Question 11
 
@@ -275,7 +276,8 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
---- question 11 fill here ---
+In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_*.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requiments file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to join use many more packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <LINK>*.
+
 
 ## Running code and tracking experiments
 
@@ -396,8 +398,9 @@ The TIMM framework seems like the optimal choice for this project.
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
 > Answer:
+> 
+We did not choose to use a GCP bucket, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented a GCP bucket.
 
---- question 19 fill here ---
 
 ### Question 20
 

@@ -15,6 +15,6 @@ COPY pyproject.toml pyproject.toml
 COPY configs configs/
 
 RUN pip install -r requirements.txt --no-cache-dir --verbose
-RUN pip install -e . --no-deps --no-cache-dir --verbose
+RUN pip install . --no-deps --no-cache-dir --verbose
 
 ENTRYPOINT ["python", "-u", "src/oracle_mnist/train.py"]
