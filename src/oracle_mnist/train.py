@@ -106,12 +106,10 @@ def sweep_train():
         )
         trainer.fit(train_module, data_module)
 
-
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--sweep", action="store_true", help="Run a WandB sweep")
+    parser.add_argument("--sweep_count", type=int, default=10, help="Number of runs for the sweep")
     args = parser.parse_args()
 
     if args.sweep:
@@ -121,6 +119,6 @@ if __name__ == "__main__":
 
         # Initialize and run the sweep
         sweep_id = wandb.sweep(sweep_config, project=PROJECT_NAME)
-        wandb.agent(sweep_id, function=sweep_train, count=3)
+        wandb.agent(sweep_id, function=sweep_train, count=args.sweep_count)
     else:
         train()
