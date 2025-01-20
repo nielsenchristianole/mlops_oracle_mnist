@@ -1,16 +1,23 @@
+from typing import Callable
 from pytorch_lightning import LightningModule
 import torch
-
-
+import timm
+import hydra
 
 class MNISTModule(LightningModule):
 
-    def __init__(self, model: torch.nn.Module, optimizer, lr_scheduler, criterion):
+    def __init__(
+        self,
+        timm_model_kwargs: dict,
+        optimizer_kwargs: dict,
+        lr_scheduler_kwargs: dict,
+        criterion: Callable[[torch.Tensor, torch.Tensor], torch.Tensor]
+    ) -> None:
         super().__init__()
-        self.save_hyperparameters(ignore=['model'])
-        self.model = model
-        self.optimizer = optimizer
-        self.lr_scheduler = lr_scheduler
+        self.save_hyperparameters()
+        self.model: torch.nn.Module = timm.create_model(**timm_model_kwargs)
+        self.optimizer = hydra.utils.instantiate(optimizer_kwargs, self.model.parameters())
+        self.lr_scheduler = hydra.utils.call(lr_scheduler_kwargs, optimizer=self.optimizer)
         self.criterion = criterion
 
     def forward(self, x):
