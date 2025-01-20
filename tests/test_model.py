@@ -30,25 +30,12 @@ class TestModel(unittest.TestCase):
         cls.data_module.prepare_data()
         cls.data_module.setup("fit")
 
-        # Instantiate the model
-        cls.model = timm.create_model(**cls.config.model)
-
-        # Instantiate the optimizer
-        cls.optimizer = hydra.utils.instantiate(
-            cls.config.train.optimizer, params=cls.model.parameters()
-        )
-
-        # Instantiate the scheduler
-        cls.scheduler = hydra.utils.instantiate(
-            cls.config.train.scheduler, optimizer=cls.optimizer
-        )
-
-        # Instantiate the criterion
-        cls.criterion = nn.CrossEntropyLoss()
-
         # Create the training module
         cls.train_module = MNISTModule(
-            cls.model, cls.optimizer, cls.scheduler, cls.criterion
+            timm_model_kwargs=cls.config.model,
+            optimizer_kwargs=cls.config.train.optimizer,
+            lr_scheduler_kwargs=cls.config.train.scheduler,
+            criterion=torch.nn.functional.cross_entropy,
         )
 
     def test_training_one_epoch(self):
@@ -70,12 +57,12 @@ class TestModel(unittest.TestCase):
     def test_model_structure(self):
         # Verify the model is initialized correctly
         self.assertEqual(
-            self.model.num_classes,
+            self.train_module.model.num_classes,
             self.config.model.num_classes,
             "Model's num_classes does not match the configuration.",
         )
         self.assertTrue(
-            hasattr(self.model, "forward"), "Model does not have a forward method."
+            hasattr(self.train_module.model, "forward"), "Model does not have a forward method."
         )
 
 
