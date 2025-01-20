@@ -9,22 +9,23 @@ PYTHON_VERSION = "3.11"
 
 # docker commands
 @task
-def build_train(ctx: Context) -> None:
+def build_train(ctx: Context, progress: str = "plain") -> None:
     """Build docker image for training."""
+    ctx.run(f"docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress}",
+            echo=True,
+            pty=not WINDOWS)
+    
+
+@task
+def build_api(ctx: Context, progress: str = "plain") -> None:
+    """Build docker images."""
     ctx.run(
-        "docker build -t train:latest . -f dockerfiles/train.dockerfile",
+        f"invoke build_train --progress {progress}",
         echo=True,
         pty=not WINDOWS,
     )
-
-
-@task(build_train)
-def build_dev(ctx: Context) -> None:
-    """Build docker image for development."""
     ctx.run(
-        "docker build -t dev:latest . -f dockerfiles/dev.dockerfile",
-        echo=True,
-        pty=not WINDOWS,
+        f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}", echo=True, pty=not WINDOWS
     )
 
 
@@ -102,19 +103,6 @@ def test(ctx: Context) -> None:
     ctx.run("coverage report -m", echo=True, pty=not WINDOWS)
 
 
-@task
-def docker_build(ctx: Context, progress: str = "plain") -> None:
-    """Build docker images."""
-    ctx.run(
-        f"docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress}",
-        echo=True,
-        pty=not WINDOWS,
-    )
-    ctx.run(
-        f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}",
-        echo=True,
-        pty=not WINDOWS
-    )
 
 # Documentation commands
 @task(dev_requirements)
