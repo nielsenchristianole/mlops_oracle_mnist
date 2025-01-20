@@ -163,7 +163,7 @@ The TIMM framework seems like the optimal choice for this project. However in th
 >
 > Answer:
 
-We kept our dependencies up to date by using and keeping update the requirements.txt file. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker devolopment image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
+We kept our dependencies up to date by using and keeping update the requirements.txt file. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker development image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
 
 
 ### Question 5
