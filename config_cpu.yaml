@@ -3,7 +3,7 @@ workerPoolSpecs:
         machineType: n1-highmem-2
     replicaCount: 1
     containerSpec:
-        imageUri: europe-west10-docker.pkg.dev/dtumlops-448409/mlops-docker-repo/train:v2
+        imageUri: europe-west1-docker.pkg.dev/dtumlops-448409/mlops-docker-repo/train:v1
         env:
         - name: "WANDB_API_KEY"
           value: "$(SECRET_MANAGER_SECRET(WANDB_API_KEY))"
