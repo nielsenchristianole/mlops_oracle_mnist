@@ -102,9 +102,11 @@ def sweep_train():
         trainer = Trainer(
             max_epochs=cfg.train.epochs,
             accelerator="gpu" if torch.cuda.is_available() else "cpu",
-            logger=WandbLogger(project=PROJECT_NAME),
+            logger=WandbLogger(project=PROJECT_NAME, save_dir="outputs/sweeps"),  # Redirect WandB logs
+            default_root_dir="outputs/sweeps"  # Specify custom directory for sweeps
         )
         trainer.fit(train_module, data_module)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

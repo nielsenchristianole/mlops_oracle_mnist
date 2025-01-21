@@ -9,4 +9,4 @@ parameters:
   batch_size:
     values: [16, 32, 64]
   epochs:
-    values: [2, 3, 4]
+    values: [10, 15, 20]
