@@ -5,5 +5,5 @@ workerPoolSpecs:
     containerSpec:
         imageUri: europe-west10-docker.pkg.dev/dtumlops-448409/mlops-docker-repo/train:v2
         env:
-            - name: "WANDB_API_KEY"
-              value: "$(SECRET_MANAGER_SECRET(WANDB_API_KEY))"
+        - name: "WANDB_API_KEY"
+          value: "$(SECRET_MANAGER_SECRET(WANDB_API_KEY))"
