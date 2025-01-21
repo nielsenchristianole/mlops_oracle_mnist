@@ -85,9 +85,12 @@ invoke docker_build
 ```
 
 # Logging with Weights and Biases
-To set up logging with weights and biases, insert an API key in a ``.env`` file. 
+To set up logging with weights and biases, weights and biases needs to be enables in the config.
+When enabled, insert an API key in a ``.env`` file. 
 The file should then have the following structure
 ```
 WANDB_API_KEY=<your-api-key>
 ```
-It is also possible to logging through the terminal, in the case where a API key is not configured.
+It is also possible to login through the terminal, in the case where a API key is not configured.
+
+
