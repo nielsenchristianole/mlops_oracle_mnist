@@ -29,7 +29,7 @@ def build_backend(ctx: Context, progress: str = "plain") -> None:
 
 
 @task
-def train_docker(ctx: Context, no_gpu: bool = False) -> None:
+def train_docker(ctx: Context, no_gpu: bool = False, no_share_data: bool = False) -> None:
     """Run training docker container."""
 
     command = [
@@ -44,8 +44,11 @@ def train_docker(ctx: Context, no_gpu: bool = False) -> None:
         "--mount type=bind,src=./outputs/,dst=/workspace/outputs",
     ]
 
+    if not no_share_data:
+        command.append("--mount type=bind,src=./data/,dst=/workspace/data")  # Mount the data directory
+
     if not no_gpu:
-        command.append("--gpus all")
+        command.append("--gpus all")  # Use GPUs
 
     command.append("train:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)

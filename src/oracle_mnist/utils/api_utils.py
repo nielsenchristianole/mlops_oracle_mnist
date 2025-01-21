@@ -11,3 +11,9 @@ Prediction = NDArray[Shape["* b"], np.int32]
 class Result(BaseModel):
     confidence: Confidence
     prediction: Prediction
+
+
+def softmax(x: np.ndarray) -> np.ndarray:
+    """Compute softmax values for each sets of scores in x."""
+    e_x = np.exp(x)
+    return e_x / e_x.sum(axis=1, keepdims=True)
