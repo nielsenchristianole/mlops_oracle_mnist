@@ -79,6 +79,7 @@ pip install invoke
 ```
 
 We recommend running the repository from inside a Docker container.
+We recommend running the repository from inside a Docker container.
 With ``invoke`` installed, just run 
 ```
 invoke docker_build
@@ -94,3 +95,6 @@ WANDB_API_KEY=<your-api-key>
 It is also possible to login through the terminal, in the case where a API key is not configured.
 
 
+# MLOps Architecture
+
+![mlachitecture](reports/figures/ml-pipeline.png)

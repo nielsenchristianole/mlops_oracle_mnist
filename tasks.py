@@ -17,20 +17,15 @@ def build_train(ctx: Context, progress: str = "plain") -> None:
     
 
 @task
-def build_api(ctx: Context, progress: str = "plain") -> None:
-    """Build docker images."""
-    ctx.run(
-        f"invoke build_train --progress {progress}",
-        echo=True,
-        pty=not WINDOWS,
-    )
-    ctx.run(
-        f"docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}", echo=True, pty=not WINDOWS
-    )
+def build_backend(ctx: Context, progress: str = "plain") -> None:
+    """Build docker image for backend."""
+    ctx.run(f"docker build -t backend:latest . -f dockerfiles/backend.dockerfile --progress={progress}",
+            echo=True,
+            pty=not WINDOWS)
 
 
 @task
-def train_docker(ctx: Context, no_gpu: bool=False) -> None:
+def train_docker(ctx: Context, no_gpu: bool=False, no_share_data: bool=False) -> None:
     """Run training docker container."""
 
     command = [
@@ -42,8 +37,26 @@ def train_docker(ctx: Context, no_gpu: bool=False) -> None:
         "--mount type=bind,src=./outputs/,dst=/workspace/outputs", # Mount the outputs directory
     ]
 
+    if not no_share_data:
+        command.append("--mount type=bind,src=./data/,dst=/workspace/data") # Mount the data directory
+
     if not no_gpu:
-        command.append("--gpus all")
+        command.append("--gpus all") # Use GPUs
+    
+    command.append("train:latest")
+    ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
+
+
+@task
+def serve_docker(ctx: Context, model_version: int=0) -> None:
+    """Run training docker container."""
+
+    command = [
+        "docker",
+        "run",
+        "--rm",
+        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/workspace/model.onnx", # Mount the model
+    ]
     
     command.append("train:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
@@ -111,3 +124,9 @@ def build_docs(ctx: Context) -> None:
 def serve_docs(ctx: Context) -> None:
     """Serve documentation."""
     ctx.run("mkdocs serve --config-file docs/mkdocs.yaml", echo=True, pty=not WINDOWS)
+
+@task
+def sweep(ctx: Context, count: int = 3) -> None:
+    """Run a WandB hyperparameter sweep."""
+    ctx.run(f"python src/oracle_mnist/train.py --sweep --sweep_count {count}", echo=True, pty=not WINDOWS)
+
