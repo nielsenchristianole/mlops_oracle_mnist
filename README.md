@@ -81,7 +81,12 @@ pip install invoke
 We recommend running the repository from inside a Docker container.
 With ``invoke`` installed, just run 
 ```
-invoke docker_build
+invoke build_train
+```
+to build the training image.  
+To building the image for the frontend/backend model interaction:
+```
+invoke build_backend
 ```
 
 # Logging with Weights and Biases
