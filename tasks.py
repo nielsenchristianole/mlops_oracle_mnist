@@ -11,50 +11,58 @@ PYTHON_VERSION = "3.11"
 @task
 def build_train(ctx: Context, progress: str = "plain") -> None:
     """Build docker image for training."""
-    ctx.run(f"docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress}",
-            echo=True,
-            pty=not WINDOWS)
-    
+    ctx.run(
+        f"docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress}",
+        echo=True,
+        pty=not WINDOWS,
+    )
+
 
 @task
 def build_backend(ctx: Context, progress: str = "plain") -> None:
     """Build docker image for backend."""
-    ctx.run(f"docker build -t backend:latest . -f dockerfiles/backend.dockerfile --progress={progress}",
-            echo=True,
-            pty=not WINDOWS)
+    ctx.run(
+        f"docker build -t backend:latest . -f dockerfiles/backend.dockerfile --progress={progress}",
+        echo=True,
+        pty=not WINDOWS,
+    )
 
 
 @task
-def train_docker(ctx: Context, no_gpu: bool=False) -> None:
+def train_docker(ctx: Context, no_gpu: bool = False) -> None:
     """Run training docker container."""
 
     command = [
         "docker",
         "run",
         "--rm",
-        "--mount type=bind,src=./configs/,dst=/workspace/configs", # Mount the configs directory
-        "--mount type=bind,src=./lightning_logs/,dst=/workspace/lightning_logs", # Mount the lightning_logs directory
-        "--mount type=bind,src=./outputs/,dst=/workspace/outputs", # Mount the outputs directory
+        # Mount the configs directory
+        "--mount type=bind,src=./configs/,dst=/workspace/configs",
+        # Mount the lightning_logs directory
+        "--mount type=bind,src=./lightning_logs/,dst=/workspace/lightning_logs",
+        # Mount the outputs directory
+        "--mount type=bind,src=./outputs/,dst=/workspace/outputs",
     ]
 
     if not no_gpu:
         command.append("--gpus all")
-    
+
     command.append("train:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
 
 
 @task
-def serve_docker(ctx: Context, model_version: int=0) -> None:
+def serve_docker(ctx: Context, model_version: int = 0) -> None:
     """Run training docker container."""
 
     command = [
         "docker",
         "run",
         "--rm",
-        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/workspace/model.onnx", # Mount the model
+        # Mount the model
+        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/workspace/model.onnx",
     ]
-    
+
     command.append("train:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
 
@@ -94,6 +102,7 @@ def preprocess_data(ctx: Context) -> None:
         pty=not WINDOWS,
     )
 
+
 @task
 def test(ctx: Context) -> None:
     """Run tests with coverage."""
@@ -103,7 +112,6 @@ def test(ctx: Context) -> None:
         pty=not WINDOWS,
     )
     ctx.run("coverage report -m", echo=True, pty=not WINDOWS)
-
 
 
 # Documentation commands
@@ -122,8 +130,8 @@ def serve_docs(ctx: Context) -> None:
     """Serve documentation."""
     ctx.run("mkdocs serve --config-file docs/mkdocs.yaml", echo=True, pty=not WINDOWS)
 
+
 @task
 def sweep(ctx: Context, count: int = 3) -> None:
     """Run a WandB hyperparameter sweep."""
     ctx.run(f"python src/oracle_mnist/train.py --sweep --sweep_count {count}", echo=True, pty=not WINDOWS)
-

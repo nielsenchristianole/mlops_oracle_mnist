@@ -341,9 +341,9 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
 > *training docker image: `docker run trainer:latest lr
-  
-  
-  
+
+
+
   1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
@@ -403,7 +403,7 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
 > Answer:
-> 
+>
 We did not choose to use a GCP bucket, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented a GCP bucket.
 
 
