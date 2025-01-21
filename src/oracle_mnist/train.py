@@ -4,13 +4,14 @@ from pathlib import Path
 
 import hydra
 import torch
-import wandb
 import yaml
 from dotenv import load_dotenv
 from lightning import Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import Logger, WandbLogger
 from omegaconf import DictConfig
+
+import wandb
 
 # Import the data loading class
 from oracle_mnist.modules.train_module import MNISTModule
