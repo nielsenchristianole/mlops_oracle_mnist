@@ -32,7 +32,7 @@ train:
     lr_warmup_max: 4e-2
     lr_warmup_period: 1000
   batch_size: 32
-  epochs: 10
+  epochs: 2
 
 misc:
   seed: 42
