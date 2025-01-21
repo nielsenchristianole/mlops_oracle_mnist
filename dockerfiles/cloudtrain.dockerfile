@@ -8,7 +8,7 @@ RUN apt update && \
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 libgl1 -y
 
 COPY src src/
-COPY configs condigs/
+COPY configs configs/
 COPY requirements.txt requirements.txt
 COPY requirements_dev.txt requirements_dev.txt
 COPY README.md README.md
