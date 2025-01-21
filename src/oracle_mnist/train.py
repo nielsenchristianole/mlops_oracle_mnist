@@ -80,7 +80,13 @@ def train(cfg: DictConfig) -> None:
     export_model = train_module.__class__.load_from_checkpoint(model_checkpoint.best_model_path).eval() # TODO replace with better way to load model
     export_model.to_onnx(
         file_path=Path(model_checkpoint.best_model_path).with_suffix('.onnx'),
-        input_sample=torch.randn(*model_input_shape))
+        input_sample=torch.randn(*model_input_shape),
+        input_names=["input"],
+        output_names=["output"],
+        dynamic_axes={
+            "input": {0: "batch_size"},
+            "output": {0: "batch_size"}})
+
 
 def sweep_train():
     with wandb.init() as run:
