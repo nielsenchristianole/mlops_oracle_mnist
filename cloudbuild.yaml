@@ -7,7 +7,7 @@ steps:
     '-t',
     'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:latest',  # Use substitution for the tag
     '-f',
-    'dockerfiles/train.dockerfile'
+    'dockerfiles/cloudtrain.dockerfile'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
