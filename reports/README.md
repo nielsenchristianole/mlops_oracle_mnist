@@ -57,7 +57,7 @@ will check the repositories and the code to verify your answers.
 * [x] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
 * [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
-* [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
+* [x] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [ ] Setup version control for your data or part of your data (M8)
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 * [x] Construct one or multiple docker files for your code (M10)
@@ -66,7 +66,7 @@ will check the repositories and the code to verify your answers.
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
 * [ ] Use profiling to optimize your code (M12)
 * [x] Use logging to log important events in your code (M14)
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
+* [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [ ] Consider running a hyperparameter optimization sweep (M14)
 * [x] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
@@ -74,7 +74,7 @@ will check the repositories and the code to verify your answers.
 
 * [x] Write unit tests related to the data part of your code (M16)
 * [x] Write unit tests related to model construction and or model training (M16)
-* [ ] Calculate the code coverage (M16)
+* [x] Calculate the code coverage (M16)
 * [x] Get some continuous integration running on the GitHub repository (M17)
 * [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
 * [x] Add a linting step to your continuous integration (M17)
@@ -143,7 +143,7 @@ s181486, s204131, s204243, s194142, s204114
 >
 > Answer:
 
-The TIMM framework seems like the optimal choice for this project.
+The TIMM framework seems like the optimal choice for this project. However in this case this is perhaps a bit overkill as a very simple model should be able to handle this task.
 
 ## Coding environment
 
@@ -163,7 +163,8 @@ The TIMM framework seems like the optimal choice for this project.
 >
 > Answer:
 
-We kept our dependencies up to date by using and keeping update the requirements.txt file. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker devolopment image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
+We kept our dependencies up to date by using and keeping the requirements.txt file updated. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker development image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
+
 
 ### Question 5
 
@@ -194,7 +195,7 @@ For the most part, we kept our selves constrained to the cookie-cutter format. W
 >
 > Answer:
 
---- question 6 fill here ---
+We attempted to keep the typing in check for the project, but only for the classes, and not the intiation of classes. We also had some discussions on linting, of which we used the package black to enforce. Code projects can easily balloon in code base size and complexity as more features/dimensions are added. Staying aligned in terms of code style makes it easier for all parties to better understand the code and have aligned mental models of the code in terms of use/need. It also reduces the amount of technical debt.
 
 ## Version control
 
@@ -339,7 +340,11 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 >
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
+> *training docker image: `docker run trainer:latest lr
+  
+  
+  
+  1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
 

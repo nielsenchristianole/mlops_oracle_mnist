@@ -67,6 +67,8 @@ class OracleMNISTInMemory(OracleMNIST):
 
 
 class OracleMNISTDummy(OracleMNIST):
+    """ Dummy dataset which mimics the oracleMINST dataset """
+
     def __init__(
         self,
         data_paths: list[Path],
@@ -320,7 +322,7 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
 
 class OracleMNISTModuleDummy(OracleMNISTBaseModule):
     """
-    This data module does not do any preprocessing
+    This data module does not do any preprocessing and loads the dummy dataset.
     """
 
     data_version_name = "dummy"
