@@ -1,9 +1,7 @@
 import unittest
 
 import hydra
-import timm
 import torch
-import torch.nn as nn
 from lightning import Trainer
 
 from src.oracle_mnist.modules.train_module import MNISTModule
@@ -18,9 +16,7 @@ class TestModel(unittest.TestCase):
 
         # Manually correct the _target_ paths for the data module and scheduler
         cls.config.data_loader._target_ = "src.oracle_mnist.data.OracleMNISTModuleDummy"
-        cls.config.train.scheduler._target_ = (
-            "src.oracle_mnist.scheduler.sarphiv_scheduler.get_schedular"
-        )
+        cls.config.train.scheduler._target_ = "src.oracle_mnist.scheduler.sarphiv_scheduler.get_schedular"
 
         # Instantiate the data module
         # remove imsize, as its not needed to dummy data loader
@@ -61,9 +57,7 @@ class TestModel(unittest.TestCase):
             self.config.model.num_classes,
             "Model's num_classes does not match the configuration.",
         )
-        self.assertTrue(
-            hasattr(self.train_module.model, "forward"), "Model does not have a forward method."
-        )
+        self.assertTrue(hasattr(self.train_module.model, "forward"), "Model does not have a forward method.")
 
 
 if __name__ == "__main__":
