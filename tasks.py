@@ -25,19 +25,19 @@ def build_backend(ctx: Context, progress: str = "plain") -> None:
 
 
 @task
-def train_docker(ctx: Context, no_gpu: bool=False, no_share_data: bool=False) -> None:
+def train_docker(ctx: Context, no_gpu: bool=False, share_data: bool=False) -> None:
     """Run training docker container."""
 
     command = [
         "docker",
         "run",
         "--rm",
-        "--mount type=bind,src=./configs/,dst=/workspace/configs", # Mount the configs directory
-        "--mount type=bind,src=./lightning_logs/,dst=/workspace/lightning_logs", # Mount the lightning_logs directory
-        "--mount type=bind,src=./outputs/,dst=/workspace/outputs", # Mount the outputs directory
+        "--mount type=bind,src=./configs/,dst=/gcs/cloud_mlops_bucket/configs", # Mount the configs directory
+        "--mount type=bind,src=./lightning_logs/,dst=/gcs/cloud_mlops_bucket/lightning_logs", # Mount the lightning_logs directory
+        "--mount type=bind,src=./outputs/,dst=/gcs/cloud_mlops_bucket/outputs", # Mount the outputs directory
     ]
 
-    if not no_share_data:
+    if share_data:
         command.append("--mount type=bind,src=./data/,dst=/workspace/data") # Mount the data directory
 
     if not no_gpu:
