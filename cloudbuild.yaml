@@ -11,7 +11,7 @@ steps:
       'dockerfiles/cloudtrain.dockerfile'
     ]
     env:
-      - 'WANDB_API_KEY=${WANDB_API_KEY}'  # Inject the secret as an environment variable
+      - 'WANDB_API_KEY=$WANDB_API_KEY'  # Inject the secret as an environment variable
 
   # Step 2: Push the container image
   - name: 'gcr.io/cloud-builders/docker'
@@ -21,7 +21,7 @@ steps:
       'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:wconfigwsecrets'
     ]
     env:
-      - 'WANDB_API_KEY=${WANDB_API_KEY}'  # Inject the secret as an environment variable
+      - 'WANDB_API_KEY=$WANDB_API_KEY'  # Inject the secret as an environment variable
 
 options:
   logging: CLOUD_LOGGING_ONLY
