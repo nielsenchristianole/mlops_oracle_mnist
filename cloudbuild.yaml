@@ -1,21 +1,32 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'Build container image'
-  args: [
-    'build',
-    '.',
-    '-t',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:wconfig',
-    '-f',
-    'dockerfiles/cloudtrain.dockerfile'
-  ]
-  
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'Push container image'
-  args: [
-    'push',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:wconfig'
-  ]
+  # Step 1: Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build container image'
+    args: [
+      'build',
+      '.',
+      '-t',
+      'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:wconfig',
+      '-f',
+      'dockerfiles/cloudtrain.dockerfile'
+    ]
+    env:
+      - 'WANDB_API_KEY=$WANDB_API_KEY'  # Inject the secret as an environment variable
+
+  # Step 2: Push the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push container image'
+    args: [
+      'push',
+      'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:wconfigwsecrets'
+    ]
+    env:
+      - 'WANDB_API_KEY=$WANDB_API_KEY'  # Inject the secret as an environment variable
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/dtumlops/secrets/WANDB_API_KEY/versions/latest"
+      env: "WANDB_API_KEY"
