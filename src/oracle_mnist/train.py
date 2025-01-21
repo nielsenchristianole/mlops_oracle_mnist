@@ -11,6 +11,8 @@ from lightning.pytorch.loggers import WandbLogger, Logger, TensorBoardLogger
 from oracle_mnist.data import OracleMNISTModuleBasic  # Import the data loading class
 
 import timm
+import argparse
+import yaml
 
 import hydra
 from omegaconf import DictConfig
@@ -80,7 +82,50 @@ def train(cfg: DictConfig) -> None:
         file_path=Path(model_checkpoint.best_model_path).with_suffix('.onnx'),
         input_sample=torch.randn(*model_input_shape))
 
+def sweep_train():
+    with wandb.init() as run:
+        # Import and initialize Hydra configuration
+        with hydra.initialize(config_path="../../configs", version_base=None):
+            cfg = hydra.compose(config_name="config")
+
+        config = wandb.config
+
+        # Override Hydra configurations with sweep parameters
+        cfg.train.optimizer.lr = config.learning_rate
+        cfg.train.batch_size = config.batch_size
+        cfg.train.epochs = config.epochs
+
+        # Create and run the training module using the updated configurations
+        data_module = hydra.utils.instantiate(cfg.data_loader)
+        train_module = MNISTModule(
+            timm_model_kwargs=cfg.model,
+            optimizer_kwargs=cfg.train.optimizer,
+            lr_scheduler_kwargs=cfg.train.scheduler,
+            criterion=torch.nn.functional.cross_entropy
+        )
+
+        trainer = Trainer(
+            max_epochs=cfg.train.epochs,
+            accelerator="gpu" if torch.cuda.is_available() else "cpu",
+            logger=WandbLogger(project=PROJECT_NAME, save_dir="outputs/sweeps"),  # Redirect WandB logs
+            default_root_dir="outputs/sweeps"  # Specify custom directory for sweeps
+        )
+        trainer.fit(train_module, data_module)
 
 
 if __name__ == "__main__":
-    train()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sweep", action="store_true", help="Run a WandB sweep")
+    parser.add_argument("--sweep_count", type=int, default=10, help="Number of runs for the sweep")
+    args = parser.parse_args()
+
+    if args.sweep:
+        # Load sweep configuration
+        with open("configs/sweep_config.yaml", "r") as f:
+            sweep_config = yaml.safe_load(f)
+
+        # Initialize and run the sweep
+        sweep_id = wandb.sweep(sweep_config, project=PROJECT_NAME)
+        wandb.agent(sweep_id, function=sweep_train, count=args.sweep_count)
+    else:
+        train()
