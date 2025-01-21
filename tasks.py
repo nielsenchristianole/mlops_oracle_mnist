@@ -25,7 +25,7 @@ def build_backend(ctx: Context, progress: str = "plain") -> None:
 
 
 @task
-def train_docker(ctx: Context, no_gpu: bool=False) -> None:
+def train_docker(ctx: Context, no_gpu: bool=False, no_share_data: bool=False) -> None:
     """Run training docker container."""
 
     command = [
@@ -37,8 +37,11 @@ def train_docker(ctx: Context, no_gpu: bool=False) -> None:
         "--mount type=bind,src=./outputs/,dst=/workspace/outputs", # Mount the outputs directory
     ]
 
+    if not no_share_data:
+        command.append("--mount type=bind,src=./data/,dst=/workspace/data") # Mount the data directory
+
     if not no_gpu:
-        command.append("--gpus all")
+        command.append("--gpus all") # Use GPUs
     
     command.append("train:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
@@ -121,3 +124,9 @@ def build_docs(ctx: Context) -> None:
 def serve_docs(ctx: Context) -> None:
     """Serve documentation."""
     ctx.run("mkdocs serve --config-file docs/mkdocs.yaml", echo=True, pty=not WINDOWS)
+
+@task
+def sweep(ctx: Context, count: int = 3) -> None:
+    """Run a WandB hyperparameter sweep."""
+    ctx.run(f"python src/oracle_mnist/train.py --sweep --sweep_count {count}", echo=True, pty=not WINDOWS)
+
