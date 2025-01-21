@@ -416,12 +416,16 @@ We did not choose to use a GCP bucket, as our dataset is not one that changes. W
 
 --- question 20 fill here ---
 
+[this figure](figures/dockerimages.png)
+
 ### Question 21
 
 > **Upload 1-2 images of your GCP cloud build history, so we can see the history of the images that have been build in**
 > **your project. You can take inspiration from [this figure](figures/build.png).**
 >
 > Answer:
+
+[this figure](figures/imagehistory.png)
 
 --- question 21 fill here ---
 
