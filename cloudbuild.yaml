@@ -9,22 +9,13 @@ steps:
     '-f',
     'dockerfiles/cloudtrain.dockerfile'
   ]
-  volumes:
-  - name: 'config-volume'
-    path: '/config'
-
+  
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
     'push',
     'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:wconfig'
   ]
-
-volumes:
-- name: 'config-volume'
-  hostPath:
-    path: 'configs/config.yaml'  # Path to your config file
-    type: 'file'
 
 options:
   logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,9 @@
+workerPoolSpecs:
+    machineSpec:
+        machineType: n1-highmem-2
+    replicaCount: 1
+    containerSpec:
+        imageUri: europe-west1-docker.pkg.dev/dtumlops-448409/docker-repo/train:wconfig_v2
+        command: ["python3", "src/oracle_mnist/train.py"]
+        - name: WANDB_API_KEY
+          value: $WANDB_API_KEY
