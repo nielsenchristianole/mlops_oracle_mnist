@@ -5,22 +5,15 @@ steps:
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:v1_bucket',
+    'europe-west1-docker.pkg.dev/dtumlops-448409/repo-docker/train:astrid',  # Use substitution for the tag
     '-f',
-    'dockerfiles/train.dockerfile'
+    'dockerfiles/cloudtrain.dockerfile'
   ]
-  secretEnv: ['WANDB_API_KEY']
-
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/train:v1_bucket',
+    'europe-west1-docker.pkg.dev/dtumlops-448409/repo-docker/train:astrid'  # Use the same tag here
   ]
 options:
   logging: CLOUD_LOGGING_ONLY
-
-availableSecrets:
-  secretManager:
-  - versionName: projects/563640482228/secrets/WANDB_API_KEY/versions/2
-    env: 'WANDB_API_KEY'
