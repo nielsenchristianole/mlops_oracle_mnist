@@ -11,7 +11,7 @@ class TestModel(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Initialize Hydra and load the configuration
-        with hydra.initialize(config_path="../configs", version_base=None):
+        with hydra.initialize(config_path="../../configs", version_base=None):
             cls.config = hydra.compose(config_name="config")
 
         # Manually correct the _target_ paths for the data module and scheduler

@@ -1,17 +1,18 @@
-import torch
-from pathlib import Path
-import yaml
 import argparse
-import wandb
+
+import hydra
+import torch
+import yaml
+from dotenv import load_dotenv
 from lightning import Trainer
 from lightning.pytorch.loggers import WandbLogger
-from dotenv import load_dotenv
-import hydra
 
+import wandb
 from oracle_mnist.modules.train_module import MNISTModule
 
 PROJECT_NAME = "oracle_mnist"
 load_dotenv()  # Load the .env file
+
 
 def sweep_train():
     with wandb.init() as _:
@@ -42,6 +43,7 @@ def sweep_train():
             default_root_dir="outputs/sweeps",  # Specify custom directory for sweeps
         )
         trainer.fit(train_module, data_module)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
