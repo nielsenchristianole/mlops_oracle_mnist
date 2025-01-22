@@ -1,6 +1,6 @@
 # oracle_mnist
 
-A short description of the project.
+A short description of the project. TEST
 
 ## Project structure
 
@@ -79,15 +79,25 @@ pip install invoke
 ```
 
 We recommend running the repository from inside a Docker container.
-With ``invoke`` installed, just run 
+With ``invoke`` installed, just run
 ```
-invoke docker_build
+invoke build_train
+```
+to build the training image.  
+To building the image for the frontend/backend model interaction:
+```
+invoke build_backend
 ```
 
 # Logging with Weights and Biases
-To set up logging with weights and biases, insert an API key in a ``.env`` file. 
+To set up logging with weights and biases, insert an API key in a ``.env`` file.
 The file should then have the following structure
 ```
 WANDB_API_KEY=<your-api-key>
 ```
 It is also possible to logging through the terminal, in the case where a API key is not configured.
+
+
+# MLOps Architecture
+
+![mlachitecture](reports/figures/ml-pipeline.png)

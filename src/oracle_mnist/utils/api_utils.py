@@ -1,7 +1,6 @@
 import numpy as np
-from pydantic import BaseModel
 from numpydantic import NDArray, Shape
-
+from pydantic import BaseModel
 
 class Image(BaseModel):
     # array: NDArray[Shape["* b, 3 c, 28 y, 28 x"], np.uint8]

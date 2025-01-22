@@ -107,7 +107,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Write some documentation for your application (M32)
 * [ ] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
-* [ ] Create an architectural diagram over your MLOps pipeline
+* [x] Create an architectural diagram over your MLOps pipeline
 * [ ] Make sure all group members have an understanding about all parts of the project
 * [x] Uploaded all your code to GitHub
 
@@ -214,7 +214,7 @@ We attempted to keep the typing in check for the project, but only for the class
 >
 > Answer:
 
---- question 7 fill here ---
+We have implemented 4 tests using unittest split between two scripts. test_data.py tests the dummy data to ensure type, dimensions and more. test_model.py runs the trainer for one epoch to ensure it is functional and we also test the model structure.
 
 ### Question 8
 
@@ -229,7 +229,7 @@ We attempted to keep the typing in check for the project, but only for the class
 >
 > Answer:
 
---- question 8 fill here ---
+Total coverage percent is 48%. This is not close to 100%, but it covers the most essential parts. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
 
 ### Question 9
 
@@ -260,7 +260,7 @@ We were a little relaxed on our use of branches and PRs. Initially when making t
 >
 > Answer:
 
-We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented DVC.
+We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese hiroglyphics continously. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented DVC.
 
 ### Question 11
 
@@ -277,7 +277,7 @@ We did not choose to use DVC, as our dataset is not one that changes. We choose 
 >
 > Answer:
 
-In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_*.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requiments file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to join use many more packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <LINK>*.
+In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requirements file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to use packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <LINK>.
 
 
 ## Running code and tracking experiments
@@ -312,7 +312,7 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 >
 > Answer:
 
---- question 13 fill here ---
+When we have run an experiment and wish to reproduce it, we can look into the experiment on wandb and there all the relevant information is seen. As the experiment will point to the exact commit where the experiemnt was run, here all the information (docker files, code) for the experiment is available. The only issue would be if the experiment is run on code which was not comiited at the time, as this information is not able to be saved in the logging.
 
 ### Question 14
 
@@ -341,9 +341,9 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
 > *training docker image: `docker run trainer:latest lr
-  
-  
-  
+
+
+
   1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
@@ -403,7 +403,7 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
 > Answer:
-> 
+>
 We did not choose to use a GCP bucket, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented a GCP bucket.
 
 
@@ -416,12 +416,16 @@ We did not choose to use a GCP bucket, as our dataset is not one that changes. W
 
 --- question 20 fill here ---
 
+[this figure](figures/dockerimages.png)
+
 ### Question 21
 
 > **Upload 1-2 images of your GCP cloud build history, so we can see the history of the images that have been build in**
 > **your project. You can take inspiration from [this figure](figures/build.png).**
 >
 > Answer:
+
+[this figure](figures/imagehistory.png)
 
 --- question 21 fill here ---
 
@@ -437,6 +441,10 @@ We did not choose to use a GCP bucket, as our dataset is not one that changes. W
 > *was because ...*
 >
 > Answer:
+
+We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then tried using vertix ai to make training easier, but we found that it was impossible to mount a con
+fig file with the vertix ai machine. We then choose to implement the config with parameters directly in the image before uploading. We further had problems accessing a wandb key, since the vertix ai can't access the secret manager. Instead we also had to include the wandb access key directly in the image before uploading it to the vertix ai f
+or training.
 
 --- question 22 fill here ---
 
@@ -566,6 +574,8 @@ We did not choose to use a GCP bucket, as our dataset is not one that changes. W
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
 >
 > Answer:
+
+We spend a lot of time figuring out how to use the cloud properly, as this turned out to be quite difficult. Turns out that it is impossible to add a config file to an image inside vertix ai.
 
 --- question 30 fill here ---
 

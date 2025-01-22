@@ -8,13 +8,14 @@ from typing import Literal, Optional
 
 import cv2
 import gdown
-import numpy as np
 import lightning as L
+import numpy as np
 import torch
 import tqdm
 from PIL import Image
 from skimage.filters import threshold_otsu
 from torch.utils.data import DataLoader, Dataset
+
 from oracle_mnist.utils.data_utils import normalize_data
 
 RAW_DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "raw"
@@ -68,7 +69,7 @@ class OracleMNISTInMemory(OracleMNIST):
 
 
 class OracleMNISTDummy(OracleMNIST):
-    """ Dummy dataset which mimics the oracleMINST dataset """
+    """Dummy dataset which mimics the oracleMINST dataset"""
 
     def __init__(
         self,
@@ -115,12 +116,8 @@ class OracleMNISTBaseModule(ABC, L.LightningDataModule):
         self.raw_train_dir = _dir / "train"
         self.raw_test_dir = _dir / "test"
 
-        self.processed_train_dir = (
-            _dir.with_name("processed") / "{data_version_name}" / "train"
-        )
-        self.processed_test_dir = (
-            _dir.with_name("processed") / "{data_version_name}" / "test"
-        )
+        self.processed_train_dir = _dir.with_name("processed") / "{data_version_name}" / "train"
+        self.processed_test_dir = _dir.with_name("processed") / "{data_version_name}" / "test"
 
         self.val_split = val_split
         self.in_memory_dataset = in_memory_dataset
@@ -163,10 +160,8 @@ class OracleMNISTBaseModule(ABC, L.LightningDataModule):
         """
         Change the data version name in the path
         """
-        self.processed_train_dir = Path(
-            str(self.processed_train_dir).format(data_version_name=data_version_name))
-        self.processed_test_dir = Path(
-            str(self.processed_test_dir).format(data_version_name=data_version_name))
+        self.processed_train_dir = Path(str(self.processed_train_dir).format(data_version_name=data_version_name))
+        self.processed_test_dir = Path(str(self.processed_test_dir).format(data_version_name=data_version_name))
 
     def prepare_data(self) -> None:
         """
@@ -187,17 +182,11 @@ class OracleMNISTBaseModule(ABC, L.LightningDataModule):
         in_dirs = (self.raw_train_dir, self.raw_test_dir)
         out_dirs = (self.processed_train_dir, self.processed_test_dir)
 
-        for in_dir, out_dir in tqdm.tqdm(
-            list(zip(in_dirs, out_dirs)), desc="Processing dataset"
-        ):
-            for in_path in tqdm.tqdm(
-                list(in_dir.glob("**/*.bmp")), desc="Processing data"
-            ):
+        for in_dir, out_dir in tqdm.tqdm(list(zip(in_dirs, out_dirs)), desc="Processing dataset"):
+            for in_path in tqdm.tqdm(list(in_dir.glob("**/*.bmp")), desc="Processing data"):
                 out_path = out_dir / in_path.relative_to(in_dir).with_suffix(".npy")
                 out_path.parent.mkdir(parents=True, exist_ok=True)
-                im = np.asarray(Image.open(in_path).convert("L"), dtype=np.uint8)[
-                    ..., None
-                ]
+                im = np.asarray(Image.open(in_path).convert("L"), dtype=np.uint8)[..., None]
                 np.save(out_path, np.moveaxis(self.process_datapoint(im), -1, 0))
 
     def _is_val_data(self, datapoint_path: Path) -> bool:
@@ -230,21 +219,17 @@ class OracleMNISTBaseModule(ABC, L.LightningDataModule):
             data_paths = np.array(sorted(self.processed_train_dir.glob("**/*.npy")))
             is_val_data = np.array([self._is_val_data(path) for path in data_paths])
 
-            self.val_dataset = self._dataset(
-                data_paths=data_paths[is_val_data],
-                use_rgb=self.use_rgb)
-        
+            self.val_dataset = self._dataset(data_paths=data_paths[is_val_data], use_rgb=self.use_rgb)
+
         # train dataset
-        if stage == 'fit':
-            self.train_dataset = self._dataset(
-                data_paths=data_paths[~is_val_data],
-                use_rgb=self.use_rgb)
+        if stage == "fit":
+            self.train_dataset = self._dataset(data_paths=data_paths[~is_val_data], use_rgb=self.use_rgb)
 
         # test dataset
         if stage in ("test", "predict"):
             self.test_dataset = self._dataset(
-                data_paths=sorted(self.processed_test_dir.glob('**/*.npy')),
-                use_rgb=self.use_rgb)
+                data_paths=sorted(self.processed_test_dir.glob("**/*.npy")), use_rgb=self.use_rgb
+            )
 
     def train_dataloader(self):
         """
@@ -299,9 +284,7 @@ class OracleMNISTModuleBasic(OracleMNISTBaseModule):
             new_h, new_w = self.im_size, round(self.im_size * w / h)
         else:
             new_h, new_w = round(self.im_size * h / w), self.im_size
-        data = cv2.resize(data, (new_w, new_h), interpolation=cv2.INTER_CUBIC)[
-            ..., None
-        ]
+        data = cv2.resize(data, (new_w, new_h), interpolation=cv2.INTER_CUBIC)[..., None]
 
         # Extending the shortest edge to self.im_size and put the image to the center of the canvas.
         h, w, c = data.shape

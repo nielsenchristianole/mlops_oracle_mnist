@@ -1,17 +1,18 @@
-from lightning import LightningModule
 from typing import Callable
-import torch
-import timm
+
 import hydra
+import timm
+import torch
+from lightning import LightningModule
+
 
 class MNISTModule(LightningModule):
-
     def __init__(
         self,
         timm_model_kwargs: dict,
         optimizer_kwargs: dict,
         lr_scheduler_kwargs: dict,
-        criterion: Callable[[torch.Tensor, torch.Tensor], torch.Tensor]
+        criterion: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
@@ -55,6 +56,6 @@ class MNISTModule(LightningModule):
                 "scheduler": self.lr_scheduler,
                 "interval": "step",
                 "frequency": 1,
-                "name": "lr"
-            }
+                "name": "lr",
+            },
         }
