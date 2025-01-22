@@ -5,15 +5,15 @@ steps:
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/dtumlops-448409/repo-docker/train:astrid',  # Use substitution for the tag
+    'europe-west1-docker.pkg.dev/dtumlops-448409/repo-docker/frontend:astrid',  # Use substitution for the tag
     '-f',
-    'dockerfiles/train.dockerfile'
+    'dockerfiles/frontend.dockerfile'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/dtumlops-448409/repo-docker/train:astrid'  # Use the same tag here
+    'europe-west1-docker.pkg.dev/dtumlops-448409/repo-docker/frontend:astrid'  # Use the same tag here
   ]
 options:
   logging: CLOUD_LOGGING_ONLY
