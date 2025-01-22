@@ -1,27 +1,31 @@
 {
-    "name": "BACKEND Dev Container",
-    "build": {
-      "dockerfile": "../../dockerfiles/backend-dev.dockerfile",
-      "context": "../.."
-    },
-    "workspaceFolder": "/workspace",
-    "mounts": [
-      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
-    ],
-    "runArgs": ["--gpus", "all"],
-    "customizations": {
-      "vscode": {
-        "settings": {
-          "terminal.integrated.defaultProfile.linux": "bash",
-          "editor.formatOnSave": true
-        },
-        "extensions": [
-          "ms-python.python",
-          "ms-python.vscode-pylance",
-          "ms-azuretools.vscode-docker"
-        ]
-      }
-    },
-    "postCreateCommand": "pip install -e . --no-cache-dir --verbose",
-    "remoteUser": "root"
-  }
+  "name": "BACKEND Dev Container",
+  "build": {
+    "dockerfile": "../../dockerfiles/backend-dev.dockerfile",
+    "context": "../.."
+  },
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/lightning_logs/version_0/checkpoints/best.onnx,target=/workspace/models/model.onnx,type=bind,consistency=cached"
+  ],
+  "runArgs": [
+    "--gpus",
+    "all"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "postCreateCommand": "pip install -e . --no-cache-dir --verbose",
+  "remoteUser": "root"
+}
