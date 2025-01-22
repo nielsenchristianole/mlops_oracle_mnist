@@ -48,6 +48,7 @@ def train_docker(ctx: Context, no_gpu: bool = False, share_data: bool = False) -
         "docker",
         "run",
         "--rm",
+        f"--mount type=bind,src={CWD}/.env/,dst=/gcs/cloud_mlops_bucket/.env",
         # Mount the configs directory
         f"--mount type=bind,src={CWD}/configs/,dst=/gcs/cloud_mlops_bucket/configs",
         # Mount the lightning_logs directory
@@ -159,4 +160,4 @@ def serve_docs(ctx: Context) -> None:
 @task
 def sweep(ctx: Context, count: int = 3) -> None:
     """Run a WandB hyperparameter sweep."""
-    ctx.run(f"python src/oracle_mnist/train.py --sweep --sweep_count {count}", echo=True, pty=not WINDOWS)
+    ctx.run(f"python src/oracle_mnist/train_sweep.py --sweep_count {count}", echo=True, pty=not WINDOWS)
