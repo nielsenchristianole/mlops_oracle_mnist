@@ -577,6 +577,8 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
+We spent around 11.18 credits, divided through the services that can be seen on the image. [this figure](figures/bucketbilling.png)
+We have spent 6.34 on artifact registry probably when we tried reuploading and pushing images w. size 22 gb many times. Having the compute engine turned on for 24 hours also cost around 4.11 dollars and we tried training with it as well.
 
 --- question 27 fill here ---
 
@@ -593,7 +595,7 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 > *implemented using ...*
 >
 > Answer:
-
+We did create a front end to our api in src/frontend.py. The front end contains an image classifier, 8 example images and a markdown board for drawing images.
 --- question 28 fill here ---
 
 ### Question 29
@@ -610,6 +612,9 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
+
+Our repository is stored in github, where the users (us) have been commiting code these past weeks. Our git contains a precommit with tests before anything is commited to the main. Training is done using a pytorch lightning code framework and hydra along with wandb is used for logging. Further we have created backend, frontend and docker containers that can be mounted with config files. The data is downloaded through google drive. We use a timm framework for our model. Everything is in google cloud, including containers, configs and api-keys. Here we train through vertix.ai. The api works through a virtual machine in google cloud, hosting the backend and the front end, using the trained model through a bucket.
+
 [this figure](figures/ml-pipeline.png)
 
 
@@ -642,5 +647,9 @@ We spend a lot of time figuring out how to use the cloud properly or more accura
 > *All members contributed to code by...*
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
+
+Student s181486 and s204243 made the cloud setup with artifacts for docker, buckets for configs, the push trigger uploading a new docker container and spending a lot of time getting the vertix ai to train. s204243 also made the profilling run. s204114 made the front end and contributed extensively to the docker setup. s194142 made the wandb train sweep a long with implementing continuous integration and testing. s204131 made the data pipeline and was in charge of the backend api, where the rest helped in ways they could. Everyone contributed to writting the report, by diskussing answers and what we had done.
+
+
 
 --- question 31 fill here ---
