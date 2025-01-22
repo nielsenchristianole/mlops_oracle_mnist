@@ -20,7 +20,7 @@ PROJECT_NAME = "oracle_mnist"
 load_dotenv()  # Load the .env file
 
 
-@hydra.main(config_path="../../configs", config_name="config", version_base=None)
+@hydra.main(config_path="/gcs/cloud_mlops_bucket/configs", config_name="config", version_base=None)
 def train(cfg: DictConfig) -> None:
     seed_everything(cfg.misc.seed)
     torch.set_float32_matmul_precision(cfg.misc.precision)
@@ -64,8 +64,8 @@ def train(cfg: DictConfig) -> None:
         callbacks=callbacks,
         accelerator="gpu" if torch.cuda.is_available() else "cpu",
         logger=logger,
+        default_root_dir='/gcs/cloud_mlops_bucket/'
     )
-
     trainer.fit(train_module, data_module)
 
     # test

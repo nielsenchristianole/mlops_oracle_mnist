@@ -214,7 +214,7 @@ We attempted to keep the typing in check for the project, but only for the class
 >
 > Answer:
 
-We have implemented 4 tests using unittest split between two scripts. test_data.py tests the dummy data to ensure type, dimensions and more. test_model.py runs the trainer for one epoch to ensure it is functional and we also test the model structure.
+We have implemented 4 tests using unittest split between two scripts. test_data.py first tests the dummy data loading to ensure type, dimensions, labels. It then tests the data preparation and setup afterwards. test_model.py runs the trainer for one epoch to ensure it is functional. We also test the model structure afterwards.
 
 ### Question 8
 
@@ -229,7 +229,7 @@ We have implemented 4 tests using unittest split between two scripts. test_data.
 >
 > Answer:
 
-Total coverage percent is 48%. This is not close to 100%, but it covers the most essential parts. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
+Total coverage percent is 48%. This is not close to 100%, but it covers the most essential parts of the data loading, preparation and the model. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
 
 ### Question 9
 
@@ -260,7 +260,7 @@ We were a little relaxed on our use of branches and PRs. Initially when making t
 >
 > Answer:
 
-We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented DVC.
+We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese hiroglyphics continously. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented DVC.
 
 ### Question 11
 
@@ -277,7 +277,7 @@ We did not choose to use DVC, as our dataset is not one that changes. We choose 
 >
 > Answer:
 
-In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_*.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requiments file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to join use many more packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <LINK>*.
+In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requirements file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to use packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <LINK>.
 
 
 ## Running code and tracking experiments
@@ -312,7 +312,7 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 >
 > Answer:
 
---- question 13 fill here ---
+When we have run an experiment and wish to reproduce it, we can look into the experiment on wandb and there all the relevant information is seen. As the experiment will point to the exact commit where the experiemnt was run, here all the information (docker files, code) for the experiment is available. The only issue would be if the experiment is run on code which was not comiited at the time, as this information is not able to be saved in the logging.
 
 ### Question 14
 

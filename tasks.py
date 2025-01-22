@@ -29,23 +29,20 @@ def build_backend(ctx: Context, progress: str = "plain") -> None:
 
 
 @task
-def train_docker(ctx: Context, no_gpu: bool = False, no_share_data: bool = False) -> None:
+def train_docker(ctx: Context, no_gpu: bool = False, share_data: bool = False) -> None:
     """Run training docker container."""
 
     command = [
         "docker",
         "run",
         "--rm",
-        # Mount the configs directory
-        "--mount type=bind,src=./configs/,dst=/workspace/configs",
-        # Mount the lightning_logs directory
-        "--mount type=bind,src=./lightning_logs/,dst=/workspace/lightning_logs",
-        # Mount the outputs directory
-        "--mount type=bind,src=./outputs/,dst=/workspace/outputs",
+        "--mount type=bind,src=./configs/,dst=/gcs/cloud_mlops_bucket/configs", # Mount the configs directory
+        "--mount type=bind,src=./lightning_logs/,dst=/gcs/cloud_mlops_bucket/lightning_logs", # Mount the lightning_logs directory
+        "--mount type=bind,src=./outputs/,dst=/gcs/cloud_mlops_bucket/outputs", # Mount the outputs directory
     ]
 
-    if not no_share_data:
-        command.append("--mount type=bind,src=./data/,dst=/workspace/data")  # Mount the data directory
+    if share_data:
+        command.append("--mount type=bind,src=./data/,dst=/workspace/data") # Mount the data directory
 
     if not no_gpu:
         command.append("--gpus all")  # Use GPUs
@@ -62,11 +59,11 @@ def serve_docker(ctx: Context, model_version: int = 0) -> None:
         "docker",
         "run",
         "--rm",
-        # Mount the model
-        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/workspace/model.onnx",
+        "-p 6060:6060", # Expose port 6060
+        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/models/model.onnx", # Mount the model
     ]
-
-    command.append("train:latest")
+    
+    command.append("backend:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
 
 
