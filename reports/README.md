@@ -352,6 +352,12 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
+The following runs are on maximum 10 epochs.
+[this figure](figures/wandb_acc.png)
+As seen on the first image we are tracking the accuracy of test and validation datasets. The validation looks smoother, but that is because it is only checked every 10 steps. The train_acc plot is the measurement of accuracy. It informs us of how well our predictions are. As expected it is increasing.
+[this figure](figures/wandb_loss.png)
+The second figure informs us of the train and validation loss calculated by cross-entropy loss. The validation is again smoother caused by only calculating validation loss once 14 steps or so. As expected the lines are decreasing.
+
 
 --- question 14 fill here ---
 
@@ -364,13 +370,22 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 >
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr
-
-
-
-  1e-3 batch_size=64`. Link to docker file: <weblink>*
+> *training docker image: `docker run trainer:latest lr 1e-3 batch_size=64`. Link to docker file: https://github.com/OscarBOPedersen/mlops_oracle_mnist/tree/3505e88c063ab0a6a084b548ff0baeeb033befd1/dockerfiles*
 >
 > Answer:
+Link to docker files:
+https://github.com/OscarBOPedersen/mlops_oracle_mnist/tree/3505e88c063ab0a6a084b548ff0baeeb033befd1/dockerfiles
+
+For our project we have develop several images. One for training and one for backend. The backend is hosting our model.
+
+The last two are dev-containers, made for development.
+
+To run the training docker image do: 
+inv build-train
+inv train-docker --no-gpu
+to run it on your own computer.
+
+inv build-train also creates a container that can be entered to run scripts directly from the terminal.
 
 --- question 15 fill here ---
 
@@ -386,7 +401,10 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 > *run of our main code at some point that showed ...*
 >
 > Answer:
+Debbuging was done differently by different group members. We have used the python debugger and trial and error by reading error statements.
 
+We have run one profiling run on 2 epochs. Most time was spend in backward pass as expected. A lot of time has also been spent in a lot of time in build-in torch.conv2d which is also expected. Maybe batching in a different way could improve this. It does not look like that our train script spents a lot of time idling as it uses most of its time in the running the built in deep learning functions.
+[this figure](figures/profiling.png)
 --- question 16 fill here ---
 
 ## Working in the cloud
@@ -404,6 +422,12 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 >
 > Answer:
 
+We used Artifact Management to store our docker images. We used buckets to store output files, config files and api keys fx. wandb. 
+
+We used vertix ai for training our model, opening it in a docker container through the artifacts, feeding it the config files through the bucket and storing the logs in the bucket.
+
+We further created a trigger, that updates the docker image whenever a push is made to the production branch.
+
 --- question 17 fill here ---
 
 ### Question 18
@@ -419,6 +443,9 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 >
 > Answer:
 
+We use compute engine to host our frontend and our backend container. The following hardware was used.
+We used
+
 --- question 18 fill here ---
 
 ### Question 19
@@ -428,7 +455,11 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 >
 > Answer:
 >
-We did not choose to use a GCP bucket, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented a GCP bucket.
+
+We did not choose to use a GCP bucket, as our dataset is not one that changes. We choose a task, which mostly for learning purposes, there is no one continously needing classficiation of chinese hiroglyphics. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented a GCP bucket. 
+
+But we used bucket to store configs, outputs and a wandb-api-key.
+[this figure](figures/bucket.png)
 
 
 ### Question 20
@@ -466,9 +497,7 @@ We did not choose to use a GCP bucket, as our dataset is not one that changes. W
 >
 > Answer:
 
-We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then tried using vertix ai to make training easier, but we found that it was impossible to mount a con
-fig file with the vertix ai machine. We then choose to implement the config with parameters directly in the image before uploading. We further had problems accessing a wandb key, since the vertix ai can't access the secret manager. Instead we also had to include the wandb access key directly in the image before uploading it to the vertix ai f
-or training.
+We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then used vertix ai to train a  model. It is easier to train with vertix ai since it only requires a single command.
 
 --- question 22 fill here ---
 
@@ -486,6 +515,8 @@ or training.
 > *to the API to make it more ...*
 >
 > Answer:
+
+
 
 --- question 23 fill here ---
 
