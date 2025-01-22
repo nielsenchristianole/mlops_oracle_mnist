@@ -1,29 +1,30 @@
-import os
-
+import bentoml
 import cv2
 import numpy as np
-import requests
 import streamlit as st
-from google.cloud import run_v2
+
+# from google.cloud import run_v2
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
 
+# def get_backend_url():
+#     """Get the URL of the backend service."""
+#     parent = "projects/my-personal-mlops-project/locations/europe-west1"
+#     client = run_v2.ServicesClient()
+#     services = client.list_services(parent=parent)
+#     for service in services:
+#         if service.name.split("/")[-1] == "production-model":
+#             return service.uri
+#     return os.environ.get("BACKEND", None)
 
-def get_backend_url():
-    """Get the URL of the backend service."""
-    parent = "projects/my-personal-mlops-project/locations/europe-west1"
-    client = run_v2.ServicesClient()
-    services = client.list_services(parent=parent)
-    for service in services:
-        if service.name.split("/")[-1] == "production-model":
-            return service.uri
-    return os.environ.get("BACKEND", None)
 
-
-def classify_image(images, backend):
+def classify_image(images: np.ndarray, backend):
     """Send the image to the backend for classification."""
-    predict_url = f"{backend}/predict"
-    response = requests.post(predict_url, files={"images": images}, timeout=10)
+    images = images.tolist()
+    # predict_url = f"{backend}/predict"
+    client = bentoml.SyncHTTPClient(backend)
+    response = client.predict(im=images)
+    print(response)
     if response.status_code == 200:
         return response.json()
     return None
@@ -31,7 +32,7 @@ def classify_image(images, backend):
 
 def main() -> None:
     """Main function of the Streamlit frontend."""
-    backend = get_backend_url()
+    backend = "https://localhost:6060"  # get_backend_url()
     if backend is None:
         msg = "Backend service not found"
         raise ValueError(msg)
@@ -46,7 +47,9 @@ def main() -> None:
 
     st.image("docs/images/chinese_characters.png", use_container_width=True)
     st.write(
-        "[Mordern] Big: 大, Sun: 日, Moon 月, Cattle 牛, Next 翌, Field 田, Not 勿, Arrow 矢, Time 巳, Wood: 木"
+        "[Mordern] Big: 大, Sun: 日,\
+             Moon 月, Cattle 牛, Next 翌,\
+            Field 田, Not 勿, Arrow 矢, Time 巳, Wood: 木"
     )
 
     tab1, tab2 = st.tabs(["Upload Image", "Draw Image"])
@@ -58,16 +61,14 @@ def main() -> None:
             accept_multiple_files=True,
         )
         if uploaded_file is not None:
-            if st.button("Predict"):
-                imgs = [
-                    cv2.resize(np.array(Image.open(file)), (28, 28))
-                    for file in uploaded_file
-                ]
+            if st.button("Predict", key="predict"):
+                imgs = [cv2.resize(np.array(Image.open(file)), (28, 28)) for file in uploaded_file]
                 imgs = [cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) for img in imgs]
                 imgs = [np.repeat(img[None, ...], 3, axis=0) for img in imgs]
                 imgs = np.array(imgs)
 
-                _ = classify_image(imgs, backend=backend)
+                results = classify_image(imgs, backend=backend)
+                print("results: " + results)
 
             for file in uploaded_file:
                 st.image(file, caption="Uploaded Image", use_container_width=True)
@@ -76,7 +77,7 @@ def main() -> None:
             st.write("Please upload an image")
 
     with tab2:
-        col1, col2 = st.columns(3)
+        col1, col2 = st.columns(2)
 
         with col1:
             mode = st.checkbox("Draw (or Delete)?", True)
@@ -90,12 +91,13 @@ def main() -> None:
                 drawing_mode="freedraw" if mode else "transform",
                 key="canvas",
             )
-            if st.button("Predict"):
+            if st.button("Predict", key="predict2"):
                 img = cv2.resize(canvas_result.image_data.astype("uint8"), (28, 28))
                 imgs = img[None, None, ...]
                 imgs = np.repeat(imgs, 3, axis=1)
 
-                _ = classify_image(imgs, backend=backend)
+                results = classify_image(imgs, backend=backend)
+                print("results: " + results)
 
         with col2:
             if canvas_result.image_data is not None:
