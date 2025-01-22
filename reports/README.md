@@ -648,7 +648,7 @@ The user downloads our code from github and can then test our model by building 
 
 **Developer**
 
-Our repository is stored in github, where the users (us) have been commiting code these past weeks. Our git contains a precommit with tests before anything is commited to the main. Training is done by the developers using a pytorch lightning code framework and hydra along with wandb is used for logging. We use google cloud for storing containers, configs and api-keys. Here we train through vertix.ai.
+Our repository is stored in github, where the developers (us) have been commiting code these past weeks. Our git contains a precommit with tests before anything is commited to the main. Training is done by the developers using a pytorch lightning code framework and hydra along with wandb is used for logging. We use google cloud for storing containers, configs and api-keys. Here we train through vertix.ai.
 
 ![this figure](figures/ml-pipeline.png)
 
