@@ -1,15 +1,15 @@
 import numpy as np
+
 from pydantic import BaseModel
+from numpydantic import NDArray, Shape
 
 
 class Image(BaseModel):
-    # array: NDArray[Shape["* b, 3 c, 28 y, 28 x"], np.uint8]
-    array: list
+    array: NDArray[Shape['* b, 3 c, 28 y, 28 x'], int]
 
 
 class Confidence(BaseModel):
-    # array: NDArray[Shape["* b, 10 l"], np.float32]
-    array: list
+    array: NDArray[Shape['* b, 10 c'], float]
 
 
 def softmax(x: np.ndarray) -> np.ndarray:

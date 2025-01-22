@@ -21,8 +21,6 @@ def sweep_train():
         config = wandb.config
 
         # Override Hydra configurations with sweep parameters
-        cfg.train.optimizer.lr = config.learning_rate
-        cfg.train.batch_size = config.batch_size
         cfg.model.model_name = config.model_name
 
         # Create and run the training module using the updated configurations

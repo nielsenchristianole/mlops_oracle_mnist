@@ -11,9 +11,9 @@ data:
 data_loader:
   _target_: data.OracleMNISTModuleBasic
   batch_size: 32
-  num_workers: 4
+  num_workers: 7
   in_memory_dataset: false
-  val_split: 0.2
+  val_split: 0.1
   use_rgb: true
   imsize: 28
 
@@ -32,7 +32,7 @@ train:
     lr_warmup_max: 4e-2
     lr_warmup_period: 1000
   batch_size: 32
-  epochs: 10
+  epochs: 200
 
 misc:
   seed: 42

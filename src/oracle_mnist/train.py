@@ -58,7 +58,6 @@ def train(cfg: DictConfig) -> None:
 
     if cfg.misc.wandb_logging:
         wandb_api_key = os.environ.get("WANDB_API_KEY", None)
-        print("foo")
         if wandb_api_key is None:
             print("WANDB_API_KEY not found in environment variables")
             
