@@ -8,5 +8,5 @@ parameters:
     max: 0.01
   batch_size:
     values: [16, 32, 64]
-  epochs:
-    values: [10, 15, 20]
+  model_name:
+    values: ["mobilenetv3_small_100", "resnet18", "efficientnet_b0"]

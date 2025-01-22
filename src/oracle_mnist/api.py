@@ -1,3 +1,4 @@
+import bentoml
 import numpy as np
 import onnxruntime as rt
 import bentoml
@@ -35,7 +36,7 @@ class ImageClassifierService:
     def predict(self, im: list[list[list[list[int]]]]) -> list[list[float]]:
         """Predict the class of the input image."""
         im = normalize_data(np.array(im))
-        model_output, = self.ort_session.run(None, {'input': im})
+        (model_output,) = self.ort_session.run(None, {"input": im})
         return softmax(model_output).tolist()
 
 

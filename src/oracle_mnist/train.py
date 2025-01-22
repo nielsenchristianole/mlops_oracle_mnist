@@ -1,11 +1,9 @@
-import argparse
 import os
 from pathlib import Path
 
 import hydra
 import torch
-import yaml
-from dotenv import load_dotenv
+from dotenv import load_dotenv,find_dotenv
 from lightning import Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import Logger, WandbLogger
@@ -15,9 +13,10 @@ import wandb
 
 # Import the data loading class
 from oracle_mnist.modules.train_module import MNISTModule
+from oracle_mnist.visualize import VisualizeCallback  # Import VisualizeCallback
 
 PROJECT_NAME = "oracle_mnist"
-load_dotenv()  # Load the .env file
+load_dotenv(".env")
 
 
 @hydra.main(config_path="/gcs/cloud_mlops_bucket/configs", config_name="config", version_base=None)
@@ -43,28 +42,35 @@ def train(cfg: DictConfig) -> None:
     )
 
     model_checkpoint = ModelCheckpoint(filename="best", monitor="val_acc", save_top_k=1, save_last=True, mode="max")
-    callbacks = [model_checkpoint]
+
+    # Initialize the visualization callback
+    visualize_callback = VisualizeCallback(
+        log_dir="./outputs/logs",  # Specify the log directory
+        tsne_perplexity=30,  # Optional: t-SNE perplexity
+        tsne_n_iter=300,  # Optional: t-SNE iterations
+    )
+
+    callbacks = [model_checkpoint, visualize_callback]
 
     # Initialize wandb
 
     logger: Logger | None = None
 
     if cfg.misc.wandb_logging:
-        if wandb_api_key := os.getenv("WANDB_API_KEY"):
-            wandb.login(key=wandb_api_key)
-        else:
-            print("No API key found in environment variables. Logging in manually:")
-            wandb.login()
-
-        logger = WandbLogger(project=PROJECT_NAME)
+        wandb_api_key = os.environ.get("WANDB_API_KEY", None)
+        print("foo")
+        if wandb_api_key is None:
+            print("WANDB_API_KEY not found in environment variables")
+            
+        wandb.login(key=wandb_api_key)
 
     # Use Lightning Trainer
     trainer = Trainer(
         max_epochs=cfg.train.epochs,
-        callbacks=callbacks,
+        callbacks=callbacks,  # Add the callbacks
         accelerator="gpu" if torch.cuda.is_available() else "cpu",
         logger=logger,
-        default_root_dir='/gcs/cloud_mlops_bucket/'
+        default_root_dir="/gcs/cloud_mlops_bucket/",
     )
     trainer.fit(train_module, data_module)
 
