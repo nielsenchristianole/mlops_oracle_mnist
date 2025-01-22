@@ -83,6 +83,5 @@ def train(cfg: DictConfig) -> None:
         dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}},
     )
 
-
 if __name__ == "__main__":
     train()
