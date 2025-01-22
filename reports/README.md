@@ -214,7 +214,7 @@ We attempted to keep the typing in check for the project, but only for the class
 >
 > Answer:
 
-We have implemented 4 tests using unittest split between two scripts. test_data.py tests the dummy data to ensure type, dimensions and more. test_model.py runs the trainer for one epoch to ensure it is functional and we also test the model structure.
+We have implemented 4 tests using unittest split between two scripts. test_data.py first tests the dummy data loading to ensure type, dimensions, labels. It then tests the data preparation and setup afterwards. test_model.py runs the trainer for one epoch to ensure it is functional. We also test the model structure afterwards.
 
 ### Question 8
 
@@ -229,7 +229,7 @@ We have implemented 4 tests using unittest split between two scripts. test_data.
 >
 > Answer:
 
-Total coverage percent is 48%. This is not close to 100%, but it covers the most essential parts. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
+Total coverage percent is 48%. This is not close to 100%, but it covers the most essential parts of the data loading, preparation and the model. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
 
 ### Question 9
 
