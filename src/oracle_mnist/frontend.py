@@ -1,30 +1,29 @@
-import bentoml
 import cv2
 import numpy as np
+import requests
 import streamlit as st
-
-# from google.cloud import run_v2
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
 
-# def get_backend_url():
-#     """Get the URL of the backend service."""
-#     parent = "projects/my-personal-mlops-project/locations/europe-west1"
-#     client = run_v2.ServicesClient()
-#     services = client.list_services(parent=parent)
-#     for service in services:
-#         if service.name.split("/")[-1] == "production-model":
-#             return service.uri
-#     return os.environ.get("BACKEND", None)
+CLASS_LOOKUP = {
+    0: "Big - 大",
+    1: "Sun - 日",
+    2: "Moon - 月",
+    3: "Cattle - 牛",
+    4: "Next - 翌",
+    5: "Field - 田",
+    6: "Not - 勿",
+    7: "Arrow - 矢",
+    8: "Time - 巳",
+    9: "Wood - 木",
+}
 
 
 def classify_image(images: np.ndarray, backend):
-    """Send the image to the backend for classification."""
-    images = images.tolist()
-    # predict_url = f"{backend}/predict"
-    client = bentoml.SyncHTTPClient(backend)
-    response = client.predict(im=images)
-    print(response)
+    """
+    Send the image to the backend for classification.
+    """
+    response = requests.post(f"{backend}/predict", json={"im": images.tolist()})
     if response.status_code == 200:
         return response.json()
     return None
@@ -32,7 +31,7 @@ def classify_image(images: np.ndarray, backend):
 
 def main() -> None:
     """Main function of the Streamlit frontend."""
-    backend = "https://localhost:6060"  # get_backend_url()
+    backend = "http://localhost:6060"  # get_backend_url()
     if backend is None:
         msg = "Backend service not found"
         raise ValueError(msg)
@@ -52,31 +51,8 @@ def main() -> None:
             Field 田, Not 勿, Arrow 矢, Time 巳, Wood: 木"
     )
 
-    tab1, tab2 = st.tabs(["Upload Image", "Draw Image"])
-
+    tab1, tab2 = st.tabs(["Draw Image", "Upload Image"])
     with tab1:
-        uploaded_file = st.file_uploader(
-            "Please upload an image",
-            type=["jpg", "jpeg", "png"],
-            accept_multiple_files=True,
-        )
-        if uploaded_file is not None:
-            if st.button("Predict", key="predict"):
-                imgs = [cv2.resize(np.array(Image.open(file)), (28, 28)) for file in uploaded_file]
-                imgs = [cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) for img in imgs]
-                imgs = [np.repeat(img[None, ...], 3, axis=0) for img in imgs]
-                imgs = np.array(imgs)
-
-                results = classify_image(imgs, backend=backend)
-                print("results: " + results)
-
-            for file in uploaded_file:
-                st.image(file, caption="Uploaded Image", use_container_width=True)
-
-        else:
-            st.write("Please upload an image")
-
-    with tab2:
         col1, col2 = st.columns(2)
 
         with col1:
@@ -93,11 +69,11 @@ def main() -> None:
             )
             if st.button("Predict", key="predict2"):
                 img = cv2.resize(canvas_result.image_data.astype("uint8"), (28, 28))
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 imgs = img[None, None, ...]
                 imgs = np.repeat(imgs, 3, axis=1)
-
                 results = classify_image(imgs, backend=backend)
-                print("results: " + results)
+                st.write("Prediction: " + CLASS_LOOKUP[np.argmax(results[0])])
 
         with col2:
             if canvas_result.image_data is not None:
@@ -105,6 +81,32 @@ def main() -> None:
                 rescaled = cv2.resize(img, (192, 192), interpolation=cv2.INTER_NEAREST)
                 st.write("Pre-processed")
                 st.image(rescaled)
+
+    with tab2:
+        uploaded_file = st.file_uploader(
+            "Please upload an image",
+            type=["jpg", "jpeg", "png"],
+            accept_multiple_files=True,
+        )
+        if uploaded_file is not None:
+            if st.button("Predict", key="predict"):
+                imgs = [cv2.resize(np.array(Image.open(file)), (28, 28)) for file in uploaded_file]
+                imgs = [cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) for img in imgs]
+                imgs = [np.repeat(img[None, ...], 3, axis=0) for img in imgs]
+                imgs = np.array(imgs)
+
+                results = classify_image(imgs, backend=backend)
+                pred = [np.argmax(result) for result in results]
+
+                st.write("Predictions:")
+                for i, p in enumerate(pred):
+                    st.write(f"{uploaded_file[i].name}: {CLASS_LOOKUP[p]}")
+
+            for file in uploaded_file:
+                st.image(file, caption="Uploaded Image", use_container_width=True)
+
+        else:
+            st.write("Please upload an image")
 
 
 if __name__ == "__main__":
