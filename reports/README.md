@@ -422,13 +422,9 @@ We have run one profiling run on 2 epochs. Most time was spend in backward pass 
 >
 > Answer:
 
-We used Artifact Management to store our docker images. We used buckets to store output files, config files and api keys fx. wandb. 
+We chose not host our data on GCP, as we are able to access our data directly from google drive. However we did use Buckets to host some other data that we need avaiable while training such as env files, configs, and using it to host our trained models. We hosted images on an artifact registry. We used vertix ai for training our model, opening it in a docker container through the artifacts, feeding it the config files through the bucket and storing the logs in the bucket. We further created a trigger, that updates the docker image whenever a push is made to the production branch.
 
-We used vertix ai for training our model, opening it in a docker container through the artifacts, feeding it the config files through the bucket and storing the logs in the bucket.
 
-We further created a trigger, that updates the docker image whenever a push is made to the production branch.
-
---- question 17 fill here ---
 
 ### Question 18
 
@@ -497,9 +493,8 @@ But we used bucket to store configs, outputs and a wandb-api-key.
 >
 > Answer:
 
-We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then used vertix ai to train a  model. It is easier to train with vertix ai since it only requires a single command.
+We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then used vertex AI for further trainings, however had issues connecting to config files and secrets, in the end we used a bucket to host this information. It is easier to train with vertix ai compared to the Engine, since it only requires a single command.
 
---- question 22 fill here ---
 
 ## Deployment
 
@@ -616,7 +611,7 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 >
 > Answer:
 [this figure](figures/ml-pipeline.png)
---- question 29 fill here ---
+
 
 ### Question 30
 
@@ -630,9 +625,7 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 >
 > Answer:
 
-We spend a lot of time figuring out how to use the cloud properly or more accurately how to train with vertix ai.
-
---- question 30 fill here ---
+We spend a lot of time figuring out how to use the cloud properly or more accurately how to train with vertix ai, most we had issues with accessing secrets and configs. We also had some issues with docker, as in the end we used docker quite extensively. We had images for training and devolopment, using the train image as a base image. We also spent time implementing devcontainer, which made some things easier, but also makes "start up" more costly. Most our issues stemmed from getting one tool to work correctly and smoothly with another tool.
 
 ### Question 31
 
