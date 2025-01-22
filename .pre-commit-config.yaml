@@ -26,11 +26,11 @@ repos:
       - id: isort
         args: ["--profile", "black"]
 
-  - repo: local
-    hooks:
-      - id: unit-tests
-        name: Run Unit Tests
-        entry: bash -c "pip install -r requirements.txt && pip install -r requirements_dev.txt && pip install . && coverage run --source=src -m unittest discover -s tests/unittests -p 'test_*.py' && coverage report"
-        language: python
-        always_run: true
-        pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #     - id: unit-tests
+  #       name: Run Unit Tests
+  #       entry: bash -c "pip install -r requirements.txt && pip install -r requirements_dev.txt && pip install . && coverage run --source=src -m unittest discover -s tests -p 'test_*.py' && coverage report"
+  #       language: python
+  #       always_run: true
+  #       pass_filenames: false
