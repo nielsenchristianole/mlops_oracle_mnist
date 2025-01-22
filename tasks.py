@@ -37,6 +37,7 @@ def train_docker(ctx: Context, no_gpu: bool = False, share_data: bool = False) -
         "docker",
         "run",
         "--rm",
+        f"--mount type=bind,src={CWD}/.env/,dst=/gcs/cloud_mlops_bucket/.env",
         # Mount the configs directory
         f"--mount type=bind,src={CWD}/configs/,dst=/gcs/cloud_mlops_bucket/configs",
         # Mount the lightning_logs directory
