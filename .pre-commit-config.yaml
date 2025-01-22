@@ -3,32 +3,34 @@ repos:
     rev: v4.4.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^.*\.md$
       - id: end-of-file-fixer
-      - id: check-yaml
       - id: check-added-large-files
+      - id: check-yaml
 
   - repo: https://github.com/psf/black
-    rev: 23.9.1
+    rev: 23.1a1
     hooks:
       - id: black
-        args: ["--line-length=88"]
+        language_version: python3
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
+    rev: 6.0.0
     hooks:
       - id: flake8
-        args: ["--max-line-length=110"]
+        args: [--max-line-length=125]
 
   - repo: https://github.com/pre-commit/mirrors-isort
     rev: v5.9.3
     hooks:
       - id: isort
+        args: ["--profile", "black"]
 
   - repo: local
     hooks:
-      - id: run-unittest
-        name: Run Unittest
-        entry: python -m unittest discover -s tests -p "test_*.py"
-        language: system
-        types: [python]
+      - id: unit-tests
+        name: Run Unit Tests
+        entry: bash -c "pip install -r requirements.txt && pip install -r requirements_dev.txt && pip install . && coverage run --source=src -m unittest discover -s tests -p 'test_*.py' && coverage report"
+        language: python
+        always_run: true
         pass_filenames: false

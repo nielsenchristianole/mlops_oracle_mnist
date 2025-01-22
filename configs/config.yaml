@@ -38,3 +38,7 @@ misc:
   seed: 42
   precision: medium
   wandb_logging: false
+
+hydra:
+  run:
+    dir: /gcs/cloud_mlops_bucket/outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}

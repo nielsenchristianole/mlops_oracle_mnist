@@ -6,7 +6,10 @@
     },
     "workspaceFolder": "/workspace",
     "mounts": [
-      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+      "source=${localWorkspaceFolder}/configs,target=/gcs/cloud_mlops_bucket/configs,type=bind,consistency=cached",
+      "source=${localWorkspaceFolder}/outputs,target=/gcs/cloud_mlops_bucket/outputs,type=bind,consistency=cached",
+      "source=${localWorkspaceFolder}/lightning_logs,target=/gcs/cloud_mlops_bucket/lightning_logs,type=bind,consistency=cached"
     ],
     //"runArgs": ["--gpus", "all"],
     "customizations": {
