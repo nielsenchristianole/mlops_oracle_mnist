@@ -404,7 +404,7 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 >
 > Answer:
 
---- question 17 fill here ---
+We chose not host our data on GCP, as we are able to access our data directly from google drive. However we did use Buckets to host some other data that we need avaiable while training such as env files, configs, and using it to host our trained models. We used vertex AI to complete trainings of our models. We also hosted images on an artifact registry.
 
 ### Question 18
 
@@ -466,11 +466,8 @@ We did not choose to use a GCP bucket, as our dataset is not one that changes. W
 >
 > Answer:
 
-We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then tried using vertix ai to make training easier, but we found that it was impossible to mount a con
-fig file with the vertix ai machine. We then choose to implement the config with parameters directly in the image before uploading. We further had problems accessing a wandb key, since the vertix ai can't access the secret manager. Instead we also had to include the wandb access key directly in the image before uploading it to the vertix ai f
-or training.
+We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then used vertex AI for further trainings, however had issues connecting to config files and secrets, in the end we used a bucket to host this information.
 
---- question 22 fill here ---
 
 ## Deployment
 
@@ -585,7 +582,7 @@ or training.
 >
 > Answer:
 [this figure](figures/ml-pipeline.png)
---- question 29 fill here ---
+
 
 ### Question 30
 
@@ -599,9 +596,7 @@ or training.
 >
 > Answer:
 
-We spend a lot of time figuring out how to use the cloud properly or more accurately how to train with vertix ai.
-
---- question 30 fill here ---
+We spend a lot of time figuring out how to use the cloud properly or more accurately how to train with vertix ai, most we had issues with accessing secrets and configs. We also had some issues with docker, as in the end we used docker quite extensively. We had images for training and devolopment, using the train image as a base image. We also spent time implementing devcontainer, which made some things easier, but also makes "start up" more costly. Most our issues stemmed from getting one tool to work correctly and smoothly with another tool.
 
 ### Question 31
 
