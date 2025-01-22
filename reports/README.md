@@ -642,7 +642,10 @@ You could also just upload your own images to the front end.
 We devide the explanation of the figure into two parts. The user and the developer
 
 **User**  
-The user downloads our code from github and can then test our model by building and running the docker images for the front and back end.
+The user downloads our code from github and can then test our model by building and running the docker images for the front and back end. The front end is build using streamlit which talkes together with our backend through FastAPI using BentoML. The model is converted to onnx, so it can run without using pytorch. This makes the containers for both the front back backend very lightweight. In the image, we draw an arrow to the cloud since this was a goal of ours. We did not manage to implement this, so it remains as a future project.
+
+**Developer**
+
 
 ![this figure](figures/ml-pipeline.png)
 
