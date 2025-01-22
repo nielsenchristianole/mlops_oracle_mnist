@@ -55,10 +55,11 @@ def serve_docker(ctx: Context, model_version: int=0) -> None:
         "docker",
         "run",
         "--rm",
-        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/workspace/model.onnx", # Mount the model
+        "-p 6060:6060", # Expose port 6060
+        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/models/model.onnx", # Mount the model
     ]
     
-    command.append("train:latest")
+    command.append("backend:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
 
 
