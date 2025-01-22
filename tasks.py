@@ -5,6 +5,7 @@ from invoke import Context, task
 WINDOWS = os.name == "nt"
 PROJECT_NAME = "oracle_mnist"
 PYTHON_VERSION = "3.11"
+CWD = os.getcwd()
 
 
 # docker commands
@@ -36,13 +37,17 @@ def train_docker(ctx: Context, no_gpu: bool = False, share_data: bool = False) -
         "docker",
         "run",
         "--rm",
-        "--mount type=bind,src=./configs/,dst=/gcs/cloud_mlops_bucket/configs", # Mount the configs directory
-        "--mount type=bind,src=./lightning_logs/,dst=/gcs/cloud_mlops_bucket/lightning_logs", # Mount the lightning_logs directory
-        "--mount type=bind,src=./outputs/,dst=/gcs/cloud_mlops_bucket/outputs", # Mount the outputs directory
+        f"--mount type=bind,src={CWD}/.env/,dst=/gcs/cloud_mlops_bucket/.env",
+        # Mount the configs directory
+        f"--mount type=bind,src={CWD}/configs/,dst=/gcs/cloud_mlops_bucket/configs",
+        # Mount the lightning_logs directory
+        f"--mount type=bind,src={CWD}/lightning_logs/,dst=/gcs/cloud_mlops_bucket/lightning_logs",
+        # Mount the outputs directory
+        f"--mount type=bind,src={CWD}/outputs/,dst=/gcs/cloud_mlops_bucket/outputs",
     ]
 
     if share_data:
-        command.append("--mount type=bind,src=./data/,dst=/workspace/data") # Mount the data directory
+        command.append(f"--mount type=bind,src={CWD}/data/,dst=/workspace/data")  # Mount the data directory
 
     if not no_gpu:
         command.append("--gpus all")  # Use GPUs
@@ -59,10 +64,11 @@ def serve_docker(ctx: Context, model_version: int = 0) -> None:
         "docker",
         "run",
         "--rm",
-        "-p 6060:6060", # Expose port 6060
-        f"--mount type=bind,src=./lightning_logs/version_{model_version}/checkpoints/best.onnx,dst=/models/model.onnx", # Mount the model
+        "-p 6060:6060",  # Expose port 6060
+        f"--mount type=bind,src={CWD}/lightning_logs/version_{model_version} \
+          /checkpoints/best.onnx,dst=/models/model.onnx",  # Mount the model
     ]
-    
+
     command.append("backend:latest")
     ctx.run(" ".join(command), echo=True, pty=not WINDOWS)
 

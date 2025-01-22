@@ -1,10 +1,8 @@
-import argparse
 import os
 from pathlib import Path
 
 import hydra
 import torch
-import yaml
 from dotenv import load_dotenv
 from lightning import Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint
@@ -64,7 +62,7 @@ def train(cfg: DictConfig) -> None:
         callbacks=callbacks,
         accelerator="gpu" if torch.cuda.is_available() else "cpu",
         logger=logger,
-        default_root_dir='/gcs/cloud_mlops_bucket/'
+        default_root_dir="/gcs/cloud_mlops_bucket/",
     )
     trainer.fit(train_module, data_module)
 
@@ -82,6 +80,7 @@ def train(cfg: DictConfig) -> None:
         output_names=["output"],
         dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}},
     )
+
 
 if __name__ == "__main__":
     train()
