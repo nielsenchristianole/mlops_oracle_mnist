@@ -1,6 +1,6 @@
 # oracle_mnist
 
-A short description of the project.
+A short description of the project. TEST
 
 ## Project structure
 
@@ -79,8 +79,7 @@ pip install invoke
 ```
 
 We recommend running the repository from inside a Docker container.
-We recommend running the repository from inside a Docker container.
-With ``invoke`` installed, just run 
+With ``invoke`` installed, just run
 ```
 invoke docker_build
 ```

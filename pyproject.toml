@@ -25,10 +25,10 @@ dev = {file = ['requirements_dev.txt']}
 backend = {file = ['requirements_backend.txt']}
 
 [tool.flake8]
-max-line-length = 110
+max-line-length = 125
 
 [tool.black]
-line-length = 110
+line-length = 125
 
 [tool.coverage.run]
 source = ["src"]
