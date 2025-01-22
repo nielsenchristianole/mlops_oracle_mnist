@@ -79,11 +79,11 @@ will check the repositories and the code to verify your answers.
 * [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
 * [x] Add a linting step to your continuous integration (M17)
 * [x] Add pre-commit hooks to your version control setup (M18)
-* [x] Add a continues workflow that triggers when data changes (M19)
+* [ ] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [x] Create a trigger workflow for automatically building your docker images (M21)
+* [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [ ] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
 * [ ] Write API tests for your application and setup continues integration for these (M24)
@@ -229,7 +229,7 @@ We have implemented 4 tests using unittest split between two scripts. test_data.
 >
 > Answer:
 
-Total coverage percent is 48%. This is not close to 100%, but it covers the most essential parts of the data loading, preparation and the model. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
+Total code coverage percent is 48%. This is not close to 100%, but it covers the most essential parts of the data loading, preparation and the model. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
 
 ### Question 9
 
@@ -260,7 +260,7 @@ We were a little relaxed on our use of branches and PRs. Initially when making t
 >
 > Answer:
 
-We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese hiroglyphics continously. Had we choosen a task which had more of a "real-life" use case, where the dataset chagnes over time, then we should have implemented DVC.
+We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese hiroglyphics continously. Had we choosen a task which had more of a "real-life" use case, where the dataset changes over time, then we should have implemented DVC.
 
 ### Question 11
 
@@ -297,6 +297,30 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 >
 > Answer:
 
+We made use of docker images, where a config file was mounted providing the different information needed. By calling
+inv build-train
+the container is build. 
+
+By calling 
+inv train-docker
+we mount configs/config.yaml to the image container which contains all the hyperparameters needed for training.
+
+train:
+  optimizer:
+    _target_: torch.optim.Adam
+    lr: 1e-3
+    betas: [0.9, 0.999]
+    eps: 1e-8
+    weight_decay: 0
+  scheduler:
+    _target_: scheduler.sarphiv_scheduler.get_schedular
+    lr_half_period: 2000
+    lr_mult_period: 2
+    lr_min: 1e-4
+    lr_warmup_max: 4e-2
+    lr_warmup_period: 1000
+  batch_size: 32
+  epochs: 10
 --- question 12 fill here ---
 
 ### Question 13
@@ -560,7 +584,7 @@ or training.
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-
+[this figure](figures/ml-pipeline.png)
 --- question 29 fill here ---
 
 ### Question 30
@@ -575,7 +599,7 @@ or training.
 >
 > Answer:
 
-We spend a lot of time figuring out how to use the cloud properly, as this turned out to be quite difficult. Turns out that it is impossible to add a config file to an image inside vertix ai.
+We spend a lot of time figuring out how to use the cloud properly or more accurately how to train with vertix ai.
 
 --- question 30 fill here ---
 

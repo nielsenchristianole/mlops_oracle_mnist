@@ -11,7 +11,7 @@
       "source=${localWorkspaceFolder}/outputs,target=/gcs/cloud_mlops_bucket/outputs,type=bind,consistency=cached",
       "source=${localWorkspaceFolder}/lightning_logs,target=/gcs/cloud_mlops_bucket/lightning_logs,type=bind,consistency=cached"
     ],
-    "runArgs": ["--gpus", "all"],
+    //"runArgs": ["--gpus", "all"],
     "customizations": {
       "vscode": {
         "settings": {
