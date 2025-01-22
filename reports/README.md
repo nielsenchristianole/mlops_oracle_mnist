@@ -84,12 +84,12 @@ will check the repositories and the code to verify your answers.
 * [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [x] Create a trigger workflow for automatically building your docker images (M21)
 * [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Create a FastAPI application that can do inference using your model (M22)
+* [x] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
 * [ ] Write API tests for your application and setup continues integration for these (M24)
 * [ ] Load test your application (M24)
-* [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
-* [ ] Create a frontend for your API (M26)
+* [x] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
+* [x] Create a frontend for your API (M26)
 
 ### Week 3
 
@@ -100,7 +100,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
-* [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
+* [x] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
 ### Extra
 
@@ -108,7 +108,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
 * [x] Create an architectural diagram over your MLOps pipeline
-* [ ] Make sure all group members have an understanding about all parts of the project
+* [x] Make sure all group members have an understanding about all parts of the project
 * [x] Uploaded all your code to GitHub
 
 ## Group information
@@ -145,6 +145,8 @@ s181486, s204131, s204243, s194142, s204114
 
 The TIMM framework seems like the optimal choice for this project. However in this case this is perhaps a bit overkill as a very simple model should be able to handle this task.
 
+TIMM is a collection of computer vision models hosted on Huggingface. By using TIMM we can test different models against eachother. As an example later apply a hyperparameter sweep where different models by treating the model name as a hyperparamter.
+
 ## Coding environment
 
 > In the following section we are interested in learning more about you local development environment. This includes
@@ -163,7 +165,8 @@ The TIMM framework seems like the optimal choice for this project. However in th
 >
 > Answer:
 
-We kept our dependencies up to date by using and keeping the requirements.txt file updated. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker development image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly).
+We kept our dependencies up to date by using and keeping the requirements.txt file updated. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker development image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly). We also supply with docker commands for building images for the back and front end.  
+We ensure that no requirements are missing by running unit-tests on pull-requests when merging into main.
 
 
 ### Question 5
@@ -180,7 +183,7 @@ We kept our dependencies up to date by using and keeping the requirements.txt fi
 >
 > Answer:
 
-For the most part, we kept our selves constrained to the cookie-cutter format. We did not make use of the visualize.py and evalaute.py file as we made use of wanb for logging/visualization/evalutaion.
+For the most part, we kept our selves constrained to the cookie-cutter format. We did not make use of evalaute.py file as we made use of wanb for logging/visualization/evalutaion. In vizualize.py we implemented a ligning callback function which was passed to the trainer.
 
 ### Question 6
 
@@ -214,7 +217,8 @@ We attempted to keep the typing in check for the project, but only for the class
 >
 > Answer:
 
-We have implemented 4 tests using unittest split between two scripts. test_data.py first tests the dummy data loading to ensure type, dimensions, labels. It then tests the data preparation and setup afterwards. test_model.py runs the trainer for one epoch to ensure it is functional. We also test the model structure afterwards.
+We have implemented 6 tests using unittest split between 3 scripts. test_data.py first tests the dummy data loading to ensure type, dimensions, labels. It then tests the data preparation and setup afterwards. test_model.py runs the trainer for one epoch to ensure it is functional. We also test the model structure afterwards.
+Lastly we ran an integration test by both the health and the ability to pass batches through our backend API
 
 ### Question 8
 
@@ -245,7 +249,7 @@ Total code coverage percent is 48%. This is not close to 100%, but it covers the
 > Answer:
 
 We were a little relaxed on our use of branches and PRs. Initially when making the first changes, and not very complicated changes, we commited directly to main. As we started to do more individual development, we made branches and subsequently made PR. One could argue that it would have been smarter to have been stricter with branches and PRs from the start, as looking backwards, it would make the versioning more clear.
-
+Another learning outcome was the naming of branches. In the start, not much thought went into naming each branch. As the project progressed, we became more aware of better naming strategies like ``<owner>/<type>-<name>``, to indicate who was the responsible for the branch and which type of branch it was: feature (feat), bugfix (bug), ect.
 
 ### Question 10
 
@@ -260,7 +264,7 @@ We were a little relaxed on our use of branches and PRs. Initially when making t
 >
 > Answer:
 
-We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese hiroglyphics continously. Had we choosen a task which had more of a "real-life" use case, where the dataset changes over time, then we should have implemented DVC.
+We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese oracle bone characters continously. Had we choosen a task which had more of a "real-life" use case, where the dataset changes over time, then we should have implemented DVC. 
 
 ### Question 11
 
@@ -298,13 +302,11 @@ In our test.yaml file, we specified that we wanted our to run all of our test fi
 > Answer:
 
 We made use of docker images, where a config file was mounted providing the different information needed. By calling
-inv build-train
-the container is build. 
+``inv build-train`` the container is build. 
 
-By calling 
-inv train-docker
-we mount configs/config.yaml to the image container which contains all the hyperparameters needed for training.
+By calling ``inv train-docker`` we mount configs/config.yaml to the image container which contains all the hyperparameters needed for training. 
 
+```python
 train:
   optimizer:
     _target_: torch.optim.Adam
@@ -321,6 +323,7 @@ train:
     lr_warmup_period: 1000
   batch_size: 32
   epochs: 10
+```
 --- question 12 fill here ---
 
 ### Question 13
@@ -352,10 +355,11 @@ When we have run an experiment and wish to reproduce it, we can look into the ex
 > *As seen in the second image we are also tracking ... and ...*
 >
 > Answer:
+
 The following runs are on maximum 10 epochs.
-[this figure](figures/wandb_acc.png)
+![this figure](figures/wandb_acc.png)
 As seen on the first image we are tracking the accuracy of test and validation datasets. The validation looks smoother, but that is because it is only checked every 10 steps. The train_acc plot is the measurement of accuracy. It informs us of how well our predictions are. As expected it is increasing.
-[this figure](figures/wandb_loss.png)
+![this figure](figures/wandb_loss.png)
 The second figure informs us of the train and validation loss calculated by cross-entropy loss. The validation is again smoother caused by only calculating validation loss once 14 steps or so. As expected the lines are decreasing.
 
 
@@ -373,19 +377,27 @@ The second figure informs us of the train and validation loss calculated by cros
 > *training docker image: `docker run trainer:latest lr 1e-3 batch_size=64`. Link to docker file: https://github.com/OscarBOPedersen/mlops_oracle_mnist/tree/3505e88c063ab0a6a084b548ff0baeeb033befd1/dockerfiles*
 >
 > Answer:
+
 Link to docker files:
 https://github.com/OscarBOPedersen/mlops_oracle_mnist/tree/3505e88c063ab0a6a084b548ff0baeeb033befd1/dockerfiles
 
-For our project we have develop several images. One for training and one for backend. The backend is hosting our model.
-
-The last two are dev-containers, made for development.
+For our project we have develop several images. 
+* Training container, for training the model
+* Dev container for developing on the pipeline
+* Backend container hosting our onnx model using BentoML and FastAPI
+* Frontend container as an interactable interface for the backend.
 
 To run the training docker image do: 
+```
 inv build-train
-inv train-docker --no-gpu
-to run it on your own computer.
+```
+For training without opening the image in a container:
+```
+inv train-docker
+```
+We also supply a ``--no-gpu`` flag if a GPU is not available.
 
-inv build-train also creates a container that can be entered to run scripts directly from the terminal.
+``inv build-train`` also creates a container that can be entered to run scripts directly from the terminal. The same goes for the ``build-frontend`` and ``build-backend`` commands.
 
 --- question 15 fill here ---
 
@@ -401,8 +413,12 @@ inv build-train also creates a container that can be entered to run scripts dire
 > *run of our main code at some point that showed ...*
 >
 > Answer:
-Debbuging was done differently by different group members. We have used the python debugger and trial and error by reading error statements.
 
+Debbuging was done differently by different group members. We have used the python debugger and trial and error by reading error statements.
+One tool which we found especially usefull was to use import the python debugger by:
+```
+import pdb; pdb.set_trace()
+```
 We have run one profiling run on 2 epochs. Most time was spend in backward pass as expected. A lot of time has also been spent in a lot of time in build-in torch.conv2d which is also expected. Maybe batching in a different way could improve this. It does not look like that our train script spents a lot of time idling as it uses most of its time in the running the built in deep learning functions.
 [this figure](figures/profiling.png)
 --- question 16 fill here ---
@@ -467,7 +483,7 @@ But we used bucket to store configs, outputs and a wandb-api-key.
 
 --- question 20 fill here ---
 
-[this figure](figures/dockerimages.png)
+![this figure](figures/dockerimages.png)
 
 ### Question 21
 
@@ -476,7 +492,7 @@ But we used bucket to store configs, outputs and a wandb-api-key.
 >
 > Answer:
 
-[this figure](figures/imagehistory.png)
+![this figure](figures/imagehistory.png)
 
 --- question 21 fill here ---
 
@@ -511,7 +527,7 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 >
 > Answer:
 
-
+For writing an API we used FastAPI and BentoML. BentoML allowed us to batch API calls
 
 --- question 23 fill here ---
 
@@ -529,6 +545,8 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 >
 > Answer:
 
+We did not manage to deploy out API in the cloud. This was primarily a time issue, since we struggled alot with training the model on the cloud. We speculate that it would be fairly easy to depply a model in the cloud, since we got it work locally.
+
 --- question 24 fill here ---
 
 ### Question 25
@@ -544,6 +562,8 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 >
 > Answer:
 
+We did not perform any load test on our API but we did deploy a health check and a batch check. The goal of the batch test was to see if we could serve different batch sizes. 
+
 --- question 25 fill here ---
 
 ### Question 26
@@ -558,6 +578,8 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 > *measure ... and ... that would inform us about this ... behaviour of our application.*
 >
 > Answer:
+
+We did not implement monitoring of our deployed model
 
 --- question 26 fill here ---
 
@@ -595,7 +617,13 @@ We have spent 6.34 on artifact registry probably when we tried reuploading and p
 > *implemented using ...*
 >
 > Answer:
-We did create a front end to our api in src/frontend.py. The front end contains an image classifier, 8 example images and a markdown board for drawing images.
+
+We did implement a frontend using streamlit. Since our task was to predict old chinese characters, we also implemented a canvas where you could draw a character and get the prediction.
+
+![frontend](figures/frontend.png)
+
+You could also just upload your own images to the front end.
+
 --- question 28 fill here ---
 
 ### Question 29
@@ -613,9 +641,16 @@ We did create a front end to our api in src/frontend.py. The front end contains 
 >
 > Answer:
 
-Our repository is stored in github, where the users (us) have been commiting code these past weeks. Our git contains a precommit with tests before anything is commited to the main. Training is done using a pytorch lightning code framework and hydra along with wandb is used for logging. Further we have created backend, frontend and docker containers that can be mounted with config files. The data is downloaded through google drive. We use a timm framework for our model. Everything is in google cloud, including containers, configs and api-keys. Here we train through vertix.ai. The api works through a virtual machine in google cloud, hosting the backend and the front end, using the trained model through a bucket.
+We devide the explanation of the figure into two parts. The user and the developer
 
-[this figure](figures/ml-pipeline.png)
+**User**  
+The user downloads our code from github and can then test our model by building and running the docker images for the front and back end. The front end is build using streamlit which talkes together with our backend through FastAPI using BentoML. The model is converted to onnx, so it can run without using pytorch. This makes the containers for both the front back backend very lightweight. In the image, we draw an arrow to the cloud since this was a goal of ours. We did not manage to implement this, so it remains as a future project.
+
+**Developer**
+
+Our repository is stored in github, where the users (us) have been commiting code these past weeks. Our git contains a precommit with tests before anything is commited to the main. Training is done by the developers using a pytorch lightning code framework and hydra along with wandb is used for logging. We use google cloud for storing containers, configs and api-keys. Here we train through vertix.ai.
+
+![this figure](figures/ml-pipeline.png)
 
 
 ### Question 30
