@@ -1,4 +1,4 @@
-from train import train
+from oracle_mnist.train import train
 import cProfile
 
 if __name__ == "__main__":
