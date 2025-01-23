@@ -165,7 +165,7 @@ TIMM is a collection of computer vision models hosted on Huggingface. By using T
 >
 > Answer:
 
-We kept our dependencies up to date by using and keeping the requirements.txt file updated. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker development image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker_build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly). We also supply with docker commands for building images for the back and front end.  
+We kept our dependencies up to date by using and keeping the requirements.txt file updated. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker development image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker-build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly). We also supply with docker commands for building images for the back and front end.  
 We ensure that no requirements are missing by running unit-tests on pull-requests when merging into main.
 
 
@@ -281,7 +281,7 @@ We did not choose to use DVC, as our dataset is not one that changes. We choose 
 >
 > Answer:
 
-In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requirements file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to use packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <LINK>.
+In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requirements file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to use packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <[LINK](https://github.com/OscarBOPedersen/mlops_oracle_mnist/actions/runs/12867618778)>.
 
 
 ## Running code and tracking experiments
@@ -455,10 +455,8 @@ We chose not host our data on GCP, as we are able to access our data directly fr
 >
 > Answer:
 
-We use compute engine to host our frontend and our backend container. The following hardware was used.
-We used
+In the end we were not able to host our application on GCP, however we did make use of vertexAI for trainings, which spins up an instance of a machine, using a specified image from the artifact registry. As we had issues with permissions for GPU machines, we used a n1-highmem-2 machine.
 
---- question 18 fill here ---
 
 ### Question 19
 
@@ -481,7 +479,6 @@ But we used bucket to store configs, outputs and a wandb-api-key.
 >
 > Answer:
 
---- question 20 fill here ---
 
 ![this figure](figures/dockerimages.png)
 
@@ -494,7 +491,6 @@ But we used bucket to store configs, outputs and a wandb-api-key.
 
 ![this figure](figures/imagehistory.png)
 
---- question 21 fill here ---
 
 ### Question 22
 
@@ -547,8 +543,6 @@ For writing an API we used FastAPI and BentoML. BentoML allowed us to batch API 
 
 We did not manage to deploy out API in the cloud. This was primarily a time issue, since we struggled alot with training the model on the cloud. We speculate that it would be fairly easy to depply a model in the cloud, since we got it work locally.
 
---- question 24 fill here ---
-
 ### Question 25
 
 > **Did you perform any unit testing and load testing of your API? If yes, explain how you did it and what results for**
@@ -579,7 +573,7 @@ We did not perform any load test on our API but we did deploy a health check and
 >
 > Answer:
 
-We did not implement monitoring of our deployed model
+We did not implement monitoring of our deployed model, as we did not have time to deploy it.
 
 --- question 26 fill here ---
 
