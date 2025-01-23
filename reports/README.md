@@ -523,7 +523,8 @@ We managed to train our model in the cloud, but only with a cpu, as we did not h
 >
 > Answer:
 
-For writing an API we used FastAPI and BentoML. BentoML allowed us to batch API calls
+We did manage to write an API for our model. We used FastAPI and BentoML to accomplish this. FastAPI was used to create the endpoints and handle HTTP requests, while BentoML was used to manage the model serving. We created a class `ImageClassifierService` that loads the ONNX model and defines a prediction endpoint. We also added batching capabilities to the API using BentoML, which allows us to handle multiple requests simultaneously, improving the efficiency and scalability of our service. We also included endpoints to check the service status.
+
 
 --- question 23 fill here ---
 
@@ -556,7 +557,7 @@ We did not manage to deploy out API in the cloud. This was primarily a time issu
 >
 > Answer:
 
-We did not perform any load test on our API but we did deploy a health check and a batch check. The goal of the batch test was to see if we could serve different batch sizes. 
+We did not perform any load test on our API but we did deploy a health check and a batch check. The goal of the batch test was to see if we could serve different batch sizes which we succesfully managed to do. 
 
 --- question 25 fill here ---
 
@@ -593,6 +594,7 @@ We did not implement monitoring of our deployed model, as we did not have time t
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
+
 We spent around 11.18 credits, divided through the services that can be seen on the image. [this figure](figures/bucketbilling.png)
 We have spent 6.34 on artifact registry probably when we tried reuploading and pushing images w. size 22 gb many times. Having the compute engine turned on for 24 hours also cost around 4.11 dollars and we tried training with it as well.
 
@@ -677,7 +679,7 @@ We spend a lot of time figuring out how to use the cloud properly or more accura
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-Student s181486 and s204243 made the cloud setup with artifacts for docker, buckets for configs, the push trigger uploading a new docker container and spending a lot of time getting the vertix ai to train. s204243 also made the profilling run. s204114 made the front end and contributed extensively to the docker setup. s194142 made the wandb train sweep along with implementing continuous integration and testing and helped create the train.py script. s204131 made the data pipeline and was in charge of the backend api, where the rest helped in ways they could. Everyone contributed to writing the report, by discussing answers and what we had done. Everyone contributed actively to the project and discussions.
+Student s181486 and s204243 made the cloud setup with artifacts for docker, buckets for configs, the push trigger uploading a new docker container and spending a lot of time getting the vertix ai to train. s204243 also made the profilling run. s204114 made the front end and contributed extensively to the docker setup and pytorch lightning. s194142 made the wandb train sweep along with implementing continuous integration and testing and helped create the train.py script. s204131 made the data pipeline and was in charge of the backend api, where the rest helped in ways they could. Everyone contributed to writing the report, by discussing answers and what we had done. Everyone contributed actively to the project and discussions.
 
 
 
