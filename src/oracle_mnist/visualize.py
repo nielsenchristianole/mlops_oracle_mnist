@@ -23,7 +23,7 @@ class VisualizeCallback(Callback):
         self.plot_metrics(train_loss, val_loss, train_acc, val_acc)
 
     def on_fit_end(self, trainer, pl_module):
-        # Extract data and visualize t-SNE
+        # Extract data and visualize
         data_module = trainer.datamodule
 
         train_embeddings, train_labels = self.generate_embeddings(pl_module, data_module.train_dataloader())

@@ -67,7 +67,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Use profiling to optimize your code (M12)
 * [x] Use logging to log important events in your code (M14)
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (M14)
+* [x] Consider running a hyperparameter optimization sweep (M14)
 * [x] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
@@ -683,7 +683,7 @@ We spend a lot of time figuring out how to use the cloud properly or more accura
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-Student s181486 and s204243 made the cloud setup with artifacts for docker, buckets for configs, the push trigger uploading a new docker container and spending a lot of time getting the vertix ai to train. s204243 also made the profilling run. s204114 made the front end and contributed extensively to the docker setup. s194142 made the wandb train sweep a long with implementing continuous integration and testing. s204131 made the data pipeline and was in charge of the backend api, where the rest helped in ways they could. Everyone contributed to writting the report, by discussing answers and what we had done.
+Student s181486 and s204243 made the cloud setup with artifacts for docker, buckets for configs, the push trigger uploading a new docker container and spending a lot of time getting the vertix ai to train. s204243 also made the profilling run. s204114 made the front end and contributed extensively to the docker setup. s194142 made the wandb train sweep along with implementing continuous integration and testing and helped create the train.py script. s204131 made the data pipeline and was in charge of the backend api, where the rest helped in ways they could. Everyone contributed to writing the report, by discussing answers and what we had done. Everyone contributed actively to the project and discussions.
 
 
 

@@ -1,54 +1,84 @@
 # oracle_mnist
 
-A short description of the project. TEST
+A short description of the project.
 
 ## Project structure
 
-The directory structure of the project looks like this:
-```txt
-├── .github/                  # Github actions and dependabot
-│   ├── dependabot.yaml
-│   └── workflows/
-│       └── tests.yaml
-├── configs/                  # Configuration files
-├── data/                     # Data directory
-│   ├── processed
-│   └── raw
-├── dockerfiles/              # Dockerfiles
-│   ├── api.Dockerfile
-│   └── train.Dockerfile
-├── docs/                     # Documentation
-│   ├── mkdocs.yml
-│   └── source/
-│       └── index.md
-├── models/                   # Trained models
-├── notebooks/                # Jupyter notebooks
-├── reports/                  # Reports
-│   └── figures/
-├── src/                      # Source code
-│   ├── project_name/
-│   │   ├── __init__.py
-│   │   ├── api.py
-│   │   ├── data.py
-│   │   ├── evaluate.py
-│   │   ├── models.py
-│   │   ├── train.py
-│   │   └── visualize.py
-└── tests/                    # Tests
-│   ├── __init__.py
-│   ├── test_api.py
-│   ├── test_data.py
-│   └── test_model.py
+MLOPS_ORACLE_MNIST
+├── .devcontainer/
+│   ├── backend/
+│   │   └── devcontainer.json
+│   ├── training/
+│       └── devcontainer.json
+├── .github/
+│   ├── workflows/
+│   │   └── tests.yaml
+│   └── dependabot.yaml
+├── configs/
+│   ├── .gitkeep
+│   ├── config_foo.yaml
+│   ├── config.yaml
+│   └── sweep_config.yaml
+├── data/
+│   ├── processed/
+│   └── raw/
+│   └── .gitignore
+├── dockerfiles/
+│   ├── backend-dev.dockerfile
+│   ├── backend.dockerfile
+│   ├── dev.dockerfile
+│   ├── frontend.dockerfile
+│   └── train.dockerfile
+├── docs/
+│   ├── images/
+│   ├── source/
+│   ├── mkdocs.yaml
+│   └── README.md
+├── models/
+├── notebooks/
+├── outputs/
+├── profiling/
+│   ├── profile_output.prof
+│   └── profiler.ipynb
+├── reports/
+│   ├── figures/
+│   ├── .gitkeep
+│   └── README.md
+├── src/
+│   ├── oracle_mnist/
+│       ├── modules/
+│       │   └── train_module.py
+│       ├── scheduler/
+│       │   └── sarphiv_scheduler.py
+│       ├── utils/
+│       │   ├── api_utils.py
+│       │   ├── data_utils.py
+│       │   ├── __init__.py
+│       │   └── train_sweep.py
+│       ├── api.py
+│       ├── data.py
+│       ├── evaluate.py
+│       ├── frontend.py
+│       ├── train_profile.py
+│       ├── train.py
+│       └── visualize.py
+├── tests/
+│   ├── integrationtests/
+|   |   |── test.api.py
+│   └── unittests/
+│       ├── test_data.py
+│       └── test_model.py
 ├── .gitignore
 ├── .pre-commit-config.yaml
+├── cloudbuild.yaml
 ├── LICENSE
-├── pyproject.toml            # Python project file
-├── README.md                 # Project README
-├── requirements.txt          # Project requirements
-├── requirements_dev.txt      # Development requirements
-└── tasks.py                  # Project tasks
-```
-
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── requirements_backend.txt
+├── requirements_dev.txt
+├── requirements_frontend.txt
+└── tasks.py
 
 Created using [mlops_template](https://github.com/SkafteNicki/mlops_template),
 a [cookiecutter template](https://github.com/cookiecutter/cookiecutter) for getting
