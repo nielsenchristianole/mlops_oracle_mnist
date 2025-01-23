@@ -5,6 +5,7 @@ A short description of the project.
 ## Project structure
 
 MLOPS_ORACLE_MNIST
+```txt
 ├── .devcontainer/
 │   ├── backend/
 │   │   └── devcontainer.json
@@ -79,6 +80,7 @@ MLOPS_ORACLE_MNIST
 ├── requirements_dev.txt
 ├── requirements_frontend.txt
 └── tasks.py
+```
 
 Created using [mlops_template](https://github.com/SkafteNicki/mlops_template),
 a [cookiecutter template](https://github.com/cookiecutter/cookiecutter) for getting
