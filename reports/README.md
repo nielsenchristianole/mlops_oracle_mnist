@@ -143,9 +143,7 @@ s181486, s204131, s204243, s194142, s204114
 >
 > Answer:
 
-The TIMM framework seems like the optimal choice for this project. However in this case this is perhaps a bit overkill as a very simple model should be able to handle this task.
-
-TIMM is a collection of computer vision models hosted on Huggingface. By using TIMM we can test different models against eachother. As an example later apply a hyperparameter sweep where different models by treating the model name as a hyperparamter.
+The TIMM framework seems like the optimal choice for this project. However in this case this is perhaps a bit overkill as a very simple model should be able to handle this task. TIMM is a collection of computer vision models hosted on Huggingface. By using TIMM we can test different models against each other. As an example later we can apply a hyperparameter sweep using different models by treating the model name as a hyperparameter. The models are then grabbed using the TIMM package, making it easy for us, as we don’t have to define these different architectures. The reason that this may be a little overkill is because the nature of the task we are modelling is quite simple, so the architecture we use does not need to be too complex.
 
 ## Coding environment
 
@@ -165,7 +163,7 @@ TIMM is a collection of computer vision models hosted on Huggingface. By using T
 >
 > Answer:
 
-We kept our dependencies up to date by using and keeping the requirements.txt file updated. We did not use any auto generation of the file, but added dependencies as they became nessisary. We also made use of a docker development image to avoid dealing with issues due to different dev enviroments. A new user would just have to run `invoke docker-build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly). We also supply with docker commands for building images for the back and front end.  
+We kept our dependencies up to date by using and keeping the requirements.txt file updated. We did not use any auto generation of the file, but added dependencies as they became necessary. We also made use of a docker development image to avoid dealing with issues due to different dev environments. A new user would just have to run `invoke docker-build` which will build the appropriate docker images for both training and development (given docker and invoke are installed correctly). We also supply with docker commands for building images for the back and front end.  
 We ensure that no requirements are missing by running unit-tests on pull-requests when merging into main.
 
 
@@ -183,7 +181,7 @@ We ensure that no requirements are missing by running unit-tests on pull-request
 >
 > Answer:
 
-For the most part, we kept our selves constrained to the cookie-cutter format. We did not make use of evalaute.py file as we made use of wanb for logging/visualization/evalutaion. In vizualize.py we implemented a ligning callback function which was passed to the trainer.
+For the most part, we kept ourselves constrained to the cookie-cutter format. We did not make use of the evalaute.py file as we made use of wandb for logging/visualization/evaluation. In vizualize.py we implemented a lightning callback function which was passed to the trainer. We did not make of the models folder, as we used TIMM to grab models from HuggingFace. We added another folder called .devcontainer, to our house json defining our development containers. We also didn’t make use of the notebooks folder, had we done more initial exploration of the data, creating visualizations and investigating its contents, then this would have been a good place to do so.
 
 ### Question 6
 
@@ -198,7 +196,7 @@ For the most part, we kept our selves constrained to the cookie-cutter format. W
 >
 > Answer:
 
-We attempted to keep the typing in check for the project, but only for the classes, and not the intiation of classes. We also had some discussions on linting, of which we used the package black to enforce. Code projects can easily balloon in code base size and complexity as more features/dimensions are added. Staying aligned in terms of code style makes it easier for all parties to better understand the code and have aligned mental models of the code in terms of use/need. It also reduces the amount of technical debt.
+We attempted to keep the typing in check for the project, but only for the classes, and not the initiation of classes. We also had some discussions on linting, of which we used the package black to enforce. Code projects can easily balloon in code base size and complexity as more features/dimensions are added. Staying aligned in terms of code style makes it easier for all parties to better understand the code and have aligned mental models of the code in terms of use/need. It also reduces the amount of technical debt. It also makes the code more understandable to new developers continuing work on it 
 
 ## Version control
 
@@ -218,7 +216,7 @@ We attempted to keep the typing in check for the project, but only for the class
 > Answer:
 
 We have implemented 6 tests using unittest split between 3 scripts. test_data.py first tests the dummy data loading to ensure type, dimensions, labels. It then tests the data preparation and setup afterwards. test_model.py runs the trainer for one epoch to ensure it is functional. We also test the model structure afterwards.
-Lastly we ran an integration test by both the health and the ability to pass batches through our backend API
+Lastly we ran an integration test by both the health and the ability to pass batches through our backend API.
 
 ### Question 8
 
@@ -233,7 +231,7 @@ Lastly we ran an integration test by both the health and the ability to pass bat
 >
 > Answer:
 
-Total code coverage percent is 48%. This is not close to 100%, but it covers the most essential parts of the data loading, preparation and the model. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems.
+Total code coverage percent is 48%. This is not close to 100%, but it covers the most essential parts of the data loading, preparation and the model. However, if we had a coverage of 100%, this does not ensure error-free code. Errors can still come from logic issues, untested edge cases, external dependencies, or integration problems. We organized the tests such that we had integration tests, unit tests and tests for our model. For the integration tests we should also consider adding more tests to cover the use of the packages that we include in our code base to ensure continued proper use.
 
 ### Question 9
 
@@ -264,7 +262,7 @@ Another learning outcome was the naming of branches. In the start, not much thou
 >
 > Answer:
 
-We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese oracle bone characters continously. Had we choosen a task which had more of a "real-life" use case, where the dataset changes over time, then we should have implemented DVC. 
+We did not choose to use DVC, as our dataset is not one that changes. We choose a task, which is mostly for learning purposes, there is very few people who are in need of classficiation of chinese oracle bone characters continously. Had we choosen a task which had more of a "real-life" use case, where the dataset changes over time, then we should have implemented DVC. Since there is only one version of our dataset, we can just use the import from the original dataset API. If this were a long term solution we wanted implemnted, then we should consider dependence on a data source not controlled by us, as if the API is removed, then we cannot access our dataset anymore.
 
 ### Question 11
 
@@ -281,7 +279,10 @@ We did not choose to use DVC, as our dataset is not one that changes. We choose 
 >
 > Answer:
 
-In our test.yaml file, we specified that we wanted our to run all of our test files. The convention we used was to name the files "test_.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that it we should have made a seperate requirements file for testing. We felt that this would make the code base more bloated, and was not nessasiry due to the simplicity of this project. If we were to use packages, we should refrain from this. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <[LINK](https://github.com/OscarBOPedersen/mlops_oracle_mnist/actions/runs/12867618778)>.
+In our test.yaml file, we specified that we wanted to run all of our test files. The convention we used was to name the files "test_.py", and then run all these files. Firstly we specified that we should install the requirements from both the module and development, though it can be argued that we should have made a separate requirements file for testing. We felt that this would make the code base more bloated, and was not necessary due to the simplicity of this project.  If we were to expand the project and include additional packages, we would likely revisit this decision and adjust accordingly. We made use of cashing, and tested using python3.11 and python3.12, as our project specifies python >= 3.11. We tested on unbunto, mac-os and windows. An example of a workflow is: <[LINK](https://github.com/OscarBOPedersen/mlops_oracle_mnist/actions/runs/12867618778)>.
+
+
+We specified in our gitflow yaml file that only the unit test should be run, this is to ensure that with more features and development, the old functionality is not lost in the process. Without these tests we may make an update which removes old necessary functionality, which would not be good. 
 
 
 ## Running code and tracking experiments
@@ -324,7 +325,6 @@ train:
   batch_size: 32
   epochs: 10
 ```
---- question 12 fill here ---
 
 ### Question 13
 
@@ -339,7 +339,7 @@ train:
 >
 > Answer:
 
-When we have run an experiment and wish to reproduce it, we can look into the experiment on wandb and there all the relevant information is seen. As the experiment will point to the exact commit where the experiemnt was run, here all the information (docker files, code) for the experiment is available. The only issue would be if the experiment is run on code which was not comiited at the time, as this information is not able to be saved in the logging.
+When we have run an experiment and wish to reproduce it, we can look into the experiment on wandb and there all the relevant information is seen. As the experiment will point to the exact commit where the experiment was run, here all the information (docker files, code) for the experiment is available. The only issue would be if the experiment is run on code which was not committed at the time, as this information is not able to be saved in the logging. However we are able to see the outputs from the run, and given we have done sufficient logging, any discrepancies between the commit code and that which is run, should hopefully be seen.
 
 ### Question 14
 
@@ -362,8 +362,6 @@ As seen on the first image we are tracking the accuracy of test and validation d
 ![this figure](figures/wandb_loss.png)
 The second figure informs us of the train and validation loss calculated by cross-entropy loss. The validation is again smoother caused by only calculating validation loss once 14 steps or so. As expected the lines are decreasing.
 
-
---- question 14 fill here ---
 
 ### Question 15
 
@@ -399,7 +397,6 @@ We also supply a ``--no-gpu`` flag if a GPU is not available.
 
 ``inv build-train`` also creates a container that can be entered to run scripts directly from the terminal. The same goes for the ``build-frontend`` and ``build-backend`` commands.
 
---- question 15 fill here ---
 
 ### Question 16
 
@@ -421,7 +418,8 @@ import pdb; pdb.set_trace()
 ```
 We have run one profiling run on 2 epochs. Most time was spend in backward pass as expected. A lot of time has also been spent in a lot of time in build-in torch.conv2d which is also expected. Maybe batching in a different way could improve this. It does not look like that our train script spents a lot of time idling as it uses most of its time in the running the built in deep learning functions.
 [this figure](figures/profiling.png)
---- question 16 fill here ---
+
+In terms of debugging cloud issues, we tried to make the cloud container and development container as similar as possible. However due to the fact that vertexAI and our dev container mounts to our buckets differently, this was sometimes difficult to achieve. In these cases, the debugging becomes a little more cumbersome.
 
 ## Working in the cloud
 
@@ -455,7 +453,7 @@ We chose not host our data on GCP, as we are able to access our data directly fr
 >
 > Answer:
 
-In the end we were not able to host our application on GCP, however we did make use of vertexAI for trainings, which spins up an instance of a machine, using a specified image from the artifact registry. As we had issues with permissions for GPU machines, we used a n1-highmem-2 machine.
+In the end we were not able to host our application on GCP, however we did make use of vertexAI for training, which spins up an instance of a machine, using a specified image from the artifact registry. As we had issues with permissions for GPU machines, we used a n1-highmem-2 machine. The problem with using VertexAI, is that when you're developing, the time it takes to upload a new image and make a run is quite slow. This is why we should have considered doing more of the development in the VIM, however the VIM also connects differently to the bucket, which is where most of issues were.
 
 
 ### Question 19
@@ -505,7 +503,7 @@ But we used bucket to store configs, outputs and a wandb-api-key.
 >
 > Answer:
 
-We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then used vertex AI for further trainings, however had issues connecting to config files and secrets, in the end we used a bucket to host this information. It is easier to train with vertix ai compared to the Engine, since it only requires a single command.
+We managed to train our model in the cloud, but only with a cpu, as we did not have access to a gpu in a region yet and we could not figure out how to use GPUs (all regions). We got it working by first uploading the image and then creating a virtual machine running on that machine from the terminal. We then used vertex AI for further trainings, however had issues connecting to config files and secrets, in the end we used a bucket to host this information. It is easier to train with vertex ai compared to the Engine, since it only requires a single command.
 
 
 ## Deployment
@@ -542,7 +540,8 @@ We did manage to write an API for our model. We used FastAPI and BentoML to acco
 >
 > Answer:
 
-We did not manage to deploy out API in the cloud. This was primarily a time issue, since we struggled alot with training the model on the cloud. We speculate that it would be fairly easy to depply a model in the cloud, since we got it work locally.
+
+We did not manage to deploy our API in the cloud. This was primarily a time issue, since we struggled a lot with training the model on the cloud. We speculate that it would be fairly easy to apply a model in the cloud, since we got it to work locally. We used a backend to host our model and do inference on our model, this then spoke to the frontend which hosted our GUI for inference via an API. The issue for hosting on the cloud would be getting the frontend and backend to work together.
 
 ### Question 25
 
@@ -559,8 +558,6 @@ We did not manage to deploy out API in the cloud. This was primarily a time issu
 
 We did not perform any load test on our API but we did deploy a health check and a batch check. The goal of the batch test was to see if we could serve different batch sizes which we succesfully managed to do. 
 
---- question 25 fill here ---
-
 ### Question 26
 
 > **Did you manage to implement monitoring of your deployed model? If yes, explain how it works. If not, explain how**
@@ -573,10 +570,8 @@ We did not perform any load test on our API but we did deploy a health check and
 > *measure ... and ... that would inform us about this ... behaviour of our application.*
 >
 > Answer:
-
-We did not implement monitoring of our deployed model, as we did not have time to deploy it.
-
---- question 26 fill here ---
+> 
+We did not implement monitoring of our deployed model, as we did not have time to deploy it. If we had deployed our model, then monitoring would be a useful tool to make sure that the model stays working as intended. Often, an unforeseen circumstance not caught by tests, is something continuously waiting. For example one request could be waiting for a lost reponse that will never arrive. In the meantime, more and more requests pile up behind it, creating a backlog. This backlog could result in lost requests, which would lessen the quality of our solution, causing annoyance to users. Creating alerts from monitoring would alert the developers of these issues, such that they can be fixed before a large backlog is created.
 
 ## Overall discussion of project
 
@@ -596,9 +591,9 @@ We did not implement monitoring of our deployed model, as we did not have time t
 > Answer:
 
 We spent around 11.18 credits, divided through the services that can be seen on the image. [this figure](figures/bucketbilling.png)
-We have spent 6.34 on artifact registry probably when we tried reuploading and pushing images w. size 22 gb many times. Having the compute engine turned on for 24 hours also cost around 4.11 dollars and we tried training with it as well.
+We have spent 6.34 on artifact registry probably when we tried reuploading and pushing images w. size 22 gb many times. Having the compute engine turned on for 24 hours also cost around 4.11 dollars and we tried training with it as well. In a business setting where the amount of cloud usage increases, it's important to keep the rising costs in check, and use tools to make sure resources are not being used unnecessarily, the practice we have employed for this project would not be sufficient in a business.
 
---- question 27 fill here ---
+
 
 ### Question 28
 
@@ -620,7 +615,6 @@ We did implement a frontend using streamlit. Since our task was to predict old c
 
 You could also just upload your own images to the front end.
 
---- question 28 fill here ---
 
 ### Question 29
 
@@ -637,16 +631,23 @@ You could also just upload your own images to the front end.
 >
 > Answer:
 
-We devide the explanation of the figure into two parts. The user and the developer
+We divide the explanation of the figure into two parts. The user and the developer
+
 
 **User**  
-The user downloads our code from github and can then test our model by building and running the docker images for the front and back end. The front end is build using streamlit which talkes together with our backend through FastAPI using BentoML. The model is converted to onnx, so it can run without using pytorch. This makes the containers for both the front back backend very lightweight. In the image, we draw an arrow to the cloud since this was a goal of ours. We did not manage to implement this, so it remains as a future project.
+The user downloads our code from github and can then test our model by building and running the docker images for the front and back end. The front end is built using streamlit which talks together with our backend through FastAPI using BentoML. The model is converted to onnx, so it can run without using pytorch. This makes the containers for both the front back backend very lightweight. In the image, we draw an arrow to the cloud since this was a goal of ours. We did not manage to implement this, so it remains as a future project.
+
 
 **Developer**
 
-Our repository is stored in github, where the developers (us) have been commiting code these past weeks. Our git contains a precommit with tests before anything is commited to the main. Training is done by the developers using a pytorch lightning code framework and hydra along with wandb is used for logging. We use google cloud for storing containers, configs and api-keys. Here we train through vertix.ai.
+
+Our repository is stored in github, where the developers (us) have been committing code these past weeks. Our git contains a pre commit with tests before anything is committed to the main. Training is done by the developers using a pytorch lightning code framework and hydra along with wandb is used for logging. We use google cloud for storing containers, configs and api-keys. Here we train through vertix.ai.
+
 
 ![this figure](figures/ml-pipeline.png)
+
+
+A developer should first set up the train container, and development container locally. This should create the proper environment for development on their computer.
 
 
 ### Question 30
@@ -661,7 +662,23 @@ Our repository is stored in github, where the developers (us) have been commitin
 >
 > Answer:
 
-We spend a lot of time figuring out how to use the cloud properly or more accurately how to train with vertix ai, most we had issues with accessing secrets and configs. We also had some issues with docker, as in the end we used docker quite extensively. We had images for training and devolopment, using the train image as a base image. We also spent time implementing devcontainer, which made some things easier, but also makes "start up" more costly. Most our issues stemmed from getting one tool to work correctly and smoothly with another tool.
+**Issues with Cloud**
+
+
+We spent a lot of time figuring out how to use the cloud properly or more accurately how to train with vertex ai, most of which we had issues with accessing secrets and configs. This was very frustrating, also as debugging was difficult and long winded. Firstly changes were made in the code/cloudbuild, which meant a new image had to be created and uploaded to the artifact registry, this makes debugging a slow task.
+
+
+**Issues with Docker**
+
+
+We also had some issues with docker, as in the end we used docker quite extensively. We had images for training and development, using the train image as a base image. We also spent time implementing devcontainer, which made some things easier, but also makes "start up" more costly. 
+
+
+**Issues with Pre-commit/gitflow**
+
+
+We didn't really have issues implementing pre-commits and gitflow, however had some annoyances with how it slowed us down. We would have to wait quite a while for tests to run, slowing down development speed. Perhaps we should have considered when these tests should have been implemented, it seems it may have been smarter to wait until the majority of initial features were implemented. However then we would have to spend time checking that all features are tested (but coverage should help with this).
+
 
 ### Question 31
 
